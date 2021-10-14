@@ -1,9 +1,8 @@
-import { BodyPix } from '@tensorflow-models/body-pix'
 import { BackgroundConfig } from '../../core/helpers/backgroundHelper'
 import { PostProcessingConfig } from '../../core/helpers/postProcessingHelper'
 import {
   inputResolutions,
-  SegmentationConfig,
+  SegmentationConfig
 } from '../../core/helpers/segmentationHelper'
 import { SourcePlayback } from '../../core/helpers/sourceHelper'
 import { TFLite } from '../../core/hooks/useTFLite'
@@ -13,7 +12,6 @@ export function buildCanvas2dPipeline(
   backgroundConfig: BackgroundConfig,
   segmentationConfig: SegmentationConfig,
   canvas: HTMLCanvasElement,
-  bodyPix: BodyPix,
   tflite: TFLite,
   addFrameEvent: () => void
 ) {
@@ -42,11 +40,7 @@ export function buildCanvas2dPipeline(
     addFrameEvent()
 
     if (backgroundConfig.type !== 'none') {
-      if (segmentationConfig.model === 'bodyPix') {
-        await runBodyPixInference()
-      } else {
-        runTFLiteInference()
-      }
+      runTFLiteInference()
     }
 
     addFrameEvent()
@@ -96,15 +90,6 @@ export function buildCanvas2dPipeline(
           imageData.data[i * 4 + 2] / 255
       }
     }
-  }
-
-  async function runBodyPixInference() {
-    const segmentation = await bodyPix.segmentPerson(segmentationMaskCanvas)
-    for (let i = 0; i < segmentationPixelCount; i++) {
-      // Sets only the alpha component of each pixel
-      segmentationMask.data[i * 4 + 3] = segmentation.data[i] ? 255 : 0
-    }
-    segmentationMaskCtx.putImageData(segmentationMask, 0, 0)
   }
 
   function runTFLiteInference() {

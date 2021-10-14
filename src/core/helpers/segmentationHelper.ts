@@ -1,5 +1,5 @@
-export type SegmentationModel = 'bodyPix' | 'meet' | 'mlkit'
-export type SegmentationBackend = 'webgl' | 'wasm' | 'wasmSimd'
+export type SegmentationModel = 'meet' 
+export type SegmentationBackend = 'wasm' | 'wasmSimd'
 export type InputResolution = '640x360' | '256x256' | '256x144' | '160x96'
 
 export const inputResolutions: {
@@ -27,9 +27,6 @@ export function getTFLiteModelFileName(
   switch (model) {
     case 'meet':
       return inputResolution === '256x144' ? 'segm_full_v679' : 'segm_lite_v681'
-
-    case 'mlkit':
-      return 'selfiesegmentation_mlkit-256x256-2021_01_19-v1215.f16'
 
     default:
       throw new Error(`No TFLite file for this segmentation model: ${model}`)

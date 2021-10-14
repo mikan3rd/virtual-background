@@ -10,6 +10,8 @@ type SourceViewerProps = {
 };
 
 function SourceViewer(props: SourceViewerProps) {
+  const { sourceConfig, onLoad } = props;
+
   const classes = useStyles();
   const [sourceUrl, setSourceUrl] = useState<string>();
   const [isLoading, setLoading] = useState(false);
@@ -24,8 +26,8 @@ function SourceViewer(props: SourceViewerProps) {
     // Enforces reloading the resource, otherwise
     // onLoad event is not always dispatched and the
     // progress indicator never disappears
-    setTimeout(() => setSourceUrl(props.sourceConfig.url));
-  }, [props.sourceConfig]);
+    setTimeout(() => setSourceUrl(sourceConfig.url));
+  }, [sourceConfig]);
 
   useEffect(() => {
     async function getCameraStream() {
@@ -43,16 +45,16 @@ function SourceViewer(props: SourceViewerProps) {
       setCameraError(true);
     }
 
-    if (props.sourceConfig.type === 'camera') {
+    if (sourceConfig.type === 'camera') {
       getCameraStream();
     } else if (videoRef.current !== null) {
       videoRef.current.srcObject = null;
     }
-  }, [props.sourceConfig]);
+  }, [sourceConfig]);
 
   function handleVideoLoad(event: SyntheticEvent) {
     const video = event.target as HTMLVideoElement;
-    props.onLoad({
+    onLoad({
       htmlElement: video,
       width: video.videoWidth,
       height: video.videoHeight,

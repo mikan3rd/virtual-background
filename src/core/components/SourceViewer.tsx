@@ -50,16 +50,6 @@ function SourceViewer(props: SourceViewerProps) {
     }
   }, [props.sourceConfig]);
 
-  function handleImageLoad(event: SyntheticEvent) {
-    const image = event.target as HTMLImageElement;
-    props.onLoad({
-      htmlElement: image,
-      width: image.naturalWidth,
-      height: image.naturalHeight,
-    });
-    setLoading(false);
-  }
-
   function handleVideoLoad(event: SyntheticEvent) {
     const video = event.target as HTMLVideoElement;
     props.onLoad({
@@ -73,9 +63,7 @@ function SourceViewer(props: SourceViewerProps) {
   return (
     <div className={classes.root}>
       {isLoading && <CircularProgress />}
-      {props.sourceConfig.type === 'image' ? (
-        <img className={classes.sourcePlayback} src={sourceUrl} hidden={isLoading} alt="" onLoad={handleImageLoad} />
-      ) : isCameraError ? (
+      {isCameraError ? (
         <VideocamOffIcon fontSize="large" />
       ) : (
         <video

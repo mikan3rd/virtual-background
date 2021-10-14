@@ -25,7 +25,7 @@ export function buildCanvas2dPipeline(
   const inputMemoryOffset = tflite._getInputMemoryOffset() / 4;
   const outputMemoryOffset = tflite._getOutputMemoryOffset() / 4;
 
-  let postProcessingConfig: PostProcessingConfig;
+  let postProcessingConfig: PostProcessingConfig | undefined;
 
   async function render() {
     if (backgroundConfig.type !== 'none') {
@@ -105,7 +105,7 @@ export function buildCanvas2dPipeline(
     ctx.globalCompositeOperation = 'copy';
     ctx.filter = 'none';
 
-    if (postProcessingConfig.smoothSegmentationMask) {
+    if (postProcessingConfig?.smoothSegmentationMask === true) {
       if (backgroundConfig.type === 'blur') {
         ctx.filter = 'blur(8px)'; // FIXME Does not work on Safari
       } else if (backgroundConfig.type === 'image') {

@@ -1,8 +1,7 @@
-import { SourceConfig, sourceImageUrls, sourceVideoUrls } from '../helpers/sourceHelper';
+import { SourceConfig, sourceVideoUrls } from '../helpers/sourceHelper';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import ImageButton from '../../shared/components/ImageButton';
 import React from 'react';
 import SelectionIconButton from '../../shared/components/SelectionIconButton';
 import Typography from '@material-ui/core/Typography';
@@ -26,14 +25,6 @@ function SourceConfigCard(props: SourceConfigCardProps) {
         <SelectionIconButton active={props.config.type === 'camera'} onClick={() => props.onChange({ type: 'camera' })}>
           <VideocamIcon />
         </SelectionIconButton>
-        {sourceImageUrls.map(imageUrl => (
-          <ImageButton
-            key={imageUrl}
-            imageUrl={imageUrl}
-            active={imageUrl === props.config.url}
-            onClick={() => props.onChange({ type: 'image', url: imageUrl })}
-          />
-        ))}
         {sourceVideoUrls.map(videoUrl => (
           <VideoButton
             key={videoUrl}

@@ -1,7 +1,7 @@
 import { BackgroundConfig, backgroundImageUrls } from './core/helpers/backgroundHelper';
 import { PostProcessingConfig } from './core/helpers/postProcessingHelper';
 import { SegmentationConfig } from './core/helpers/segmentationHelper';
-import { SourceConfig, sourceImageUrls } from './core/helpers/sourceHelper';
+import { SourceConfig, sourceVideoUrls } from './core/helpers/sourceHelper';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import BackgroundConfigCard from './core/components/BackgroundConfigCard';
 import PostProcessingConfigCard from './core/components/PostProcessingConfigCard';
@@ -14,8 +14,8 @@ import useTFLite from './core/hooks/useTFLite';
 function App() {
   const classes = useStyles();
   const [sourceConfig, setSourceConfig] = useState<SourceConfig>({
-    type: 'image',
-    url: sourceImageUrls[0],
+    type: 'video',
+    url: sourceVideoUrls[0],
   });
   const [backgroundConfig, setBackgroundConfig] = useState<BackgroundConfig>({
     type: 'image',

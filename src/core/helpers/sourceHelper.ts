@@ -1,5 +1,5 @@
 export type SourceConfig = {
-  type: 'image' | 'video' | 'camera';
+  type: 'video' | 'camera';
   url?: string;
 };
 

@@ -1,48 +1,43 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
-import React, { useEffect } from 'react'
-import { BackgroundConfig } from '../helpers/backgroundHelper'
-import { PostProcessingConfig } from '../helpers/postProcessingHelper'
-import { SegmentationConfig } from '../helpers/segmentationHelper'
-import { SourcePlayback } from '../helpers/sourceHelper'
-import useRenderingPipeline from '../hooks/useRenderingPipeline'
-import { TFLite } from '../hooks/useTFLite'
+import { BackgroundConfig } from '../helpers/backgroundHelper';
+import { PostProcessingConfig } from '../helpers/postProcessingHelper';
+import { SegmentationConfig } from '../helpers/segmentationHelper';
+import { SourcePlayback } from '../helpers/sourceHelper';
+import { TFLite } from '../hooks/useTFLite';
+import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+import React, { useEffect } from 'react';
+import Typography from '@material-ui/core/Typography';
+import useRenderingPipeline from '../hooks/useRenderingPipeline';
 
 type OutputViewerProps = {
-  sourcePlayback: SourcePlayback
-  backgroundConfig: BackgroundConfig
-  segmentationConfig: SegmentationConfig
-  postProcessingConfig: PostProcessingConfig
-  tflite: TFLite
-}
+  sourcePlayback: SourcePlayback;
+  backgroundConfig: BackgroundConfig;
+  segmentationConfig: SegmentationConfig;
+  postProcessingConfig: PostProcessingConfig;
+  tflite: TFLite;
+};
 
 function OutputViewer(props: OutputViewerProps) {
-  const classes = useStyles()
+  const classes = useStyles();
   const {
     pipeline,
     backgroundImageRef,
     canvasRef,
     fps,
     durations: [resizingDuration, inferenceDuration, postProcessingDuration],
-  } = useRenderingPipeline(
-    props.sourcePlayback,
-    props.backgroundConfig,
-    props.segmentationConfig,
-    props.tflite
-  )
+  } = useRenderingPipeline(props.sourcePlayback, props.backgroundConfig, props.segmentationConfig, props.tflite);
 
   useEffect(() => {
-    if (pipeline) {
-      pipeline.updatePostProcessingConfig(props.postProcessingConfig)
+    if (pipeline !== null) {
+      pipeline.updatePostProcessingConfig(props.postProcessingConfig);
     }
-  }, [pipeline, props.postProcessingConfig])
+  }, [pipeline, props.postProcessingConfig]);
 
   const statDetails = [
     `resizing ${resizingDuration}ms`,
     `inference ${inferenceDuration}ms`,
     `post-processing ${postProcessingDuration}ms`,
-  ]
-  const stats = `${Math.round(fps)} fps (${statDetails.join(', ')})`
+  ];
+  const stats = `${Math.round(fps)} fps (${statDetails.join(', ')})`;
 
   return (
     <div className={classes.root}>
@@ -68,7 +63,7 @@ function OutputViewer(props: OutputViewerProps) {
         {stats}
       </Typography>
     </div>
-  )
+  );
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -92,7 +87,7 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: 'rgba(0, 0, 0, 0.48)',
       color: theme.palette.common.white,
     },
-  })
-)
+  }),
+);
 
-export default OutputViewer
+export default OutputViewer;

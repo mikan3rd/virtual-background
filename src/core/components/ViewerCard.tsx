@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) => {
 
       [theme.breakpoints.up('md')]: {
         gridColumnStart: 1,
-        gridColumnEnd: 3,
+        gridColumnEnd: 1,
       },
 
       [theme.breakpoints.up('lg')]: {

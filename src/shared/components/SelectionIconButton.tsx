@@ -1,20 +1,22 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
-import SelectionButton from './SelectionButton'
+import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+import React from 'react';
+import SelectionButton from './SelectionButton';
 
 type SelectionIconButtonProps = {
-  active: boolean
-  children: React.ReactNode
-  onClick: () => void
-}
+  active: boolean;
+  children: React.ReactNode;
+  onClick: () => void;
+};
 
 function SelectionIconButton(props: SelectionIconButtonProps) {
-  const classes = useStyles()
+  const classes = useStyles();
+  const { active, children, onClick } = props;
 
   return (
-    <SelectionButton active={props.active} onClick={props.onClick}>
-      <div className={classes.root}>{props.children}</div>
+    <SelectionButton active={active} onClick={onClick}>
+      <div className={classes.root}>{children}</div>
     </SelectionButton>
-  )
+  );
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -32,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       alignItems: 'center',
     },
-  })
-)
+  }),
+);
 
-export default SelectionIconButton
+export default SelectionIconButton;

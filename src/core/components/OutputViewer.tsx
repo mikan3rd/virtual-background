@@ -17,6 +17,8 @@ type OutputViewerProps = {
 };
 
 function OutputViewer(props: OutputViewerProps) {
+  const { sourcePlayback, backgroundConfig, segmentationConfig, postProcessingConfig, tflite } = props;
+
   const classes = useStyles();
   const {
     pipeline,
@@ -24,13 +26,13 @@ function OutputViewer(props: OutputViewerProps) {
     canvasRef,
     fps,
     durations: [resizingDuration, inferenceDuration, postProcessingDuration],
-  } = useRenderingPipeline(props.sourcePlayback, props.backgroundConfig, props.segmentationConfig, props.tflite);
+  } = useRenderingPipeline(sourcePlayback, backgroundConfig, segmentationConfig, tflite);
 
   useEffect(() => {
     if (pipeline !== null) {
-      pipeline.updatePostProcessingConfig(props.postProcessingConfig);
+      pipeline.updatePostProcessingConfig(postProcessingConfig);
     }
-  }, [pipeline, props.postProcessingConfig]);
+  }, [pipeline, postProcessingConfig]);
 
   const statDetails = [
     `resizing ${resizingDuration}ms`,
@@ -41,23 +43,23 @@ function OutputViewer(props: OutputViewerProps) {
 
   return (
     <div className={classes.root}>
-      {props.backgroundConfig.type === 'image' && (
+      {backgroundConfig.type === 'image' && (
         <img
           ref={backgroundImageRef}
           className={classes.render}
-          src={props.backgroundConfig.url}
+          src={backgroundConfig.url}
           alt=""
-          hidden={props.segmentationConfig.pipeline === 'webgl2'}
+          hidden={segmentationConfig.pipeline === 'webgl2'}
         />
       )}
       <canvas
         // The key attribute is required to create a new canvas when switching
         // context mode
-        key={props.segmentationConfig.pipeline}
+        key={segmentationConfig.pipeline}
         ref={canvasRef}
         className={classes.render}
-        width={props.sourcePlayback.width}
-        height={props.sourcePlayback.height}
+        width={sourcePlayback.width}
+        height={sourcePlayback.height}
       />
       <Typography className={classes.stats} variant="caption">
         {stats}

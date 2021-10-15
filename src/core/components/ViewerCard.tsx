@@ -19,23 +19,25 @@ type ViewerCardProps = {
 };
 
 function ViewerCard(props: ViewerCardProps) {
+  const { sourceConfig, backgroundConfig, segmentationConfig, postProcessingConfig, tflite } = props;
+
   const classes = useStyles();
   const [sourcePlayback, setSourcePlayback] = useState<SourcePlayback>();
 
   useEffect(() => {
     setSourcePlayback(undefined);
-  }, [props.sourceConfig]);
+  }, [sourceConfig]);
 
   return (
     <Paper className={classes.root}>
-      <SourceViewer sourceConfig={props.sourceConfig} onLoad={setSourcePlayback} />
-      {sourcePlayback !== undefined && props.tflite !== undefined ? (
+      <SourceViewer sourceConfig={sourceConfig} onLoad={setSourcePlayback} />
+      {sourcePlayback !== undefined && tflite !== undefined ? (
         <OutputViewer
           sourcePlayback={sourcePlayback}
-          backgroundConfig={props.backgroundConfig}
-          segmentationConfig={props.segmentationConfig}
-          postProcessingConfig={props.postProcessingConfig}
-          tflite={props.tflite}
+          backgroundConfig={backgroundConfig}
+          segmentationConfig={segmentationConfig}
+          postProcessingConfig={postProcessingConfig}
+          tflite={tflite}
         />
       ) : (
         <div className={classes.noOutput}>

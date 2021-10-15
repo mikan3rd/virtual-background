@@ -4,7 +4,7 @@ import { SegmentationConfig } from '../helpers/segmentationHelper';
 import { SourcePlayback } from '../helpers/sourceHelper';
 import { TFLite } from '../hooks/useTFLite';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Typography from '@material-ui/core/Typography';
 import useRenderingPipeline from '../hooks/useRenderingPipeline';
 
@@ -19,14 +19,22 @@ type OutputViewerProps = {
 function OutputViewer(props: OutputViewerProps) {
   const { sourcePlayback, backgroundConfig, segmentationConfig, postProcessingConfig, tflite } = props;
 
+  const videoRef = useRef<HTMLVideoElement>(null);
+
   const classes = useStyles();
   const {
     pipeline,
     backgroundImageRef,
-    canvasRef,
     fps,
     durations: [resizingDuration, inferenceDuration, postProcessingDuration],
+    canvasMediaStreamState,
   } = useRenderingPipeline(sourcePlayback, backgroundConfig, segmentationConfig, tflite);
+
+  useEffect(() => {
+    if (videoRef.current !== null) {
+      videoRef.current.srcObject = canvasMediaStreamState;
+    }
+  }, [canvasMediaStreamState]);
 
   useEffect(() => {
     if (pipeline !== null) {
@@ -44,23 +52,9 @@ function OutputViewer(props: OutputViewerProps) {
   return (
     <div className={classes.root}>
       {backgroundConfig.type === 'image' && (
-        <img
-          ref={backgroundImageRef}
-          className={classes.render}
-          src={backgroundConfig.url}
-          alt=""
-          hidden={segmentationConfig.pipeline === 'webgl2'}
-        />
+        <img ref={backgroundImageRef} className={classes.render} src={backgroundConfig.url} alt="" />
       )}
-      <canvas
-        // The key attribute is required to create a new canvas when switching
-        // context mode
-        key={segmentationConfig.pipeline}
-        ref={canvasRef}
-        className={classes.render}
-        width={sourcePlayback.width}
-        height={sourcePlayback.height}
-      />
+      <video className={classes.render} ref={videoRef} autoPlay playsInline controls={false} muted loop />
       <Typography className={classes.stats} variant="caption">
         {stats}
       </Typography>

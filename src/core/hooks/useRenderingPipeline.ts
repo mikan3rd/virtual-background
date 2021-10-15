@@ -4,7 +4,14 @@ import { SegmentationConfig } from '../helpers/segmentationHelper';
 import { SourcePlayback } from '../helpers/sourceHelper';
 import { TFLite } from './useTFLite';
 import { buildWebGL2Pipeline } from '../../pipelines/webgl2/webgl2Pipeline';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+
+declare global {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+  interface HTMLCanvasElement {
+    captureStream(frameRate?: number): MediaStream;
+  }
+}
 
 function useRenderingPipeline(
   sourcePlayback: SourcePlayback,
@@ -14,9 +21,17 @@ function useRenderingPipeline(
 ) {
   const [pipeline, setPipeline] = useState<RenderingPipeline | null>(null);
   const backgroundImageRef = useRef<HTMLImageElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(document.createElement('canvas'));
   const [fps, setFps] = useState(0);
   const [durations, setDurations] = useState<number[]>([]);
+
+  const [canvasMediaStreamState, setCanvasMediaStreamState] = useState<MediaStream | null>(null);
+  const canvasMediaStreamRef = useRef(canvasMediaStreamState);
+
+  const setCanvasMediaStream = useCallback((mediaStream: typeof canvasMediaStreamState) => {
+    canvasMediaStreamRef.current = mediaStream;
+    setCanvasMediaStreamState(mediaStream);
+  }, []);
 
   useEffect(() => {
     // The useEffect cleanup function is not enough to stop
@@ -31,25 +46,25 @@ function useRenderingPipeline(
 
     let renderRequestId: number;
 
-    const newPipeline =
-      canvasRef.current === null
-        ? null
-        : buildWebGL2Pipeline(
-            sourcePlayback,
-            backgroundImageRef.current,
-            backgroundConfig,
-            segmentationConfig,
-            canvasRef.current,
-            tflite,
-            addFrameEvent,
-          );
+    canvasRef.current.width = sourcePlayback.width;
+    canvasRef.current.height = sourcePlayback.height;
+
+    const newPipeline = buildWebGL2Pipeline(
+      sourcePlayback,
+      backgroundImageRef.current,
+      backgroundConfig,
+      segmentationConfig,
+      canvasRef.current,
+      tflite,
+      addFrameEvent,
+    );
 
     async function render() {
       if (!shouldRender) {
         return;
       }
       beginFrame();
-      await newPipeline?.render();
+      await newPipeline.render();
       endFrame();
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       renderRequestId = requestAnimationFrame(render);
@@ -84,22 +99,29 @@ function useRenderingPipeline(
 
     setPipeline(newPipeline);
 
+    if (canvasMediaStreamRef.current !== null) {
+      canvasMediaStreamRef.current.getTracks().forEach(track => {
+        track.stop();
+      });
+    }
+    setCanvasMediaStream(canvasRef.current.captureStream());
+
     return () => {
       shouldRender = false;
       cancelAnimationFrame(renderRequestId);
-      newPipeline?.cleanUp();
+      newPipeline.cleanUp();
       console.log('Animation stopped:', sourcePlayback, backgroundConfig, segmentationConfig);
 
       setPipeline(null);
     };
-  }, [sourcePlayback, backgroundConfig, segmentationConfig, tflite]);
+  }, [sourcePlayback, backgroundConfig, segmentationConfig, tflite, setCanvasMediaStream]);
 
   return {
     pipeline,
     backgroundImageRef,
-    canvasRef,
     fps,
     durations,
+    canvasMediaStreamState,
   };
 }
 

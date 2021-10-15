@@ -22,22 +22,22 @@ type SegmentationConfigCardProps = {
 };
 
 function SegmentationConfigCard(props: SegmentationConfigCardProps) {
+  const { config, isSIMDSupported, onChange } = props;
+
   const classes = useStyles();
 
   function handleModelChange(event: ChangeEvent<{ value: unknown }>) {
     const model = event.target.value as SegmentationModel;
-    let { backend } = props.config;
-    let { inputResolution } = props.config;
-    let { pipeline } = props.config;
+    let { backend } = config;
+    let { inputResolution } = config;
+    let { pipeline } = config;
 
-    if (inputResolution !== '256x144' && inputResolution !== '160x96') {
-      backend = props.isSIMDSupported ? 'wasmSimd' : 'wasm';
-      inputResolution = '160x96';
-      pipeline = 'webgl2';
-    }
+    backend = isSIMDSupported ? 'wasmSimd' : 'wasm';
+    inputResolution = '160x96';
+    pipeline = 'webgl2';
 
-    props.onChange({
-      ...props.config,
+    onChange({
+      ...config,
       model,
       backend,
       inputResolution,
@@ -46,22 +46,22 @@ function SegmentationConfigCard(props: SegmentationConfigCardProps) {
   }
 
   function handleBackendChange(event: ChangeEvent<{ value: unknown }>) {
-    props.onChange({
-      ...props.config,
+    onChange({
+      ...config,
       backend: event.target.value as SegmentationBackend,
     });
   }
 
   function handleInputResolutionChange(event: ChangeEvent<{ value: unknown }>) {
-    props.onChange({
-      ...props.config,
+    onChange({
+      ...config,
       inputResolution: event.target.value as InputResolution,
     });
   }
 
   function handlePipelineChange(event: ChangeEvent<{ value: unknown }>) {
-    props.onChange({
-      ...props.config,
+    onChange({
+      ...config,
       pipeline: event.target.value as PipelineName,
     });
   }
@@ -75,38 +75,29 @@ function SegmentationConfigCard(props: SegmentationConfigCardProps) {
         <div className={classes.formControls}>
           <FormControl className={classes.formControl} variant="outlined">
             <InputLabel>Model</InputLabel>
-            <Select label="Model" value={props.config.model} onChange={handleModelChange}>
+            <Select label="Model" value={config.model} onChange={handleModelChange}>
               <MenuItem value="meet">Meet</MenuItem>
             </Select>
           </FormControl>
           <FormControl className={classes.formControl} variant="outlined">
             <InputLabel>Backend</InputLabel>
-            <Select label="Backend" value={props.config.backend} onChange={handleBackendChange}>
+            <Select label="Backend" value={config.backend} onChange={handleBackendChange}>
               <MenuItem value="wasm">WebAssembly</MenuItem>
-              <MenuItem value="wasmSimd" disabled={!props.isSIMDSupported}>
+              <MenuItem value="wasmSimd" disabled={!isSIMDSupported}>
                 WebAssembly SIMD
               </MenuItem>
-              <MenuItem value="webgl">WebGL</MenuItem>
             </Select>
           </FormControl>
           <FormControl className={classes.formControl} variant="outlined">
             <InputLabel>Input resolution</InputLabel>
-            <Select
-              label="Input resolution"
-              value={props.config.inputResolution}
-              onChange={handleInputResolutionChange}
-            >
-              <MenuItem value="640x360">640x360</MenuItem>
-              <MenuItem value="256x256">256x256</MenuItem>
-              <MenuItem value="256x144">256x144</MenuItem>
+            <Select label="Input resolution" value={config.inputResolution} onChange={handleInputResolutionChange}>
               <MenuItem value="160x96">160x96</MenuItem>
             </Select>
           </FormControl>
           <FormControl className={classes.formControl} variant="outlined">
             <InputLabel>Pipeline</InputLabel>
-            <Select label="Pipeline" value={props.config.pipeline} onChange={handlePipelineChange}>
+            <Select label="Pipeline" value={config.pipeline} onChange={handlePipelineChange}>
               <MenuItem value="webgl2">WebGL 2</MenuItem>
-              <MenuItem value="canvas2dCpu">Canvas 2D + CPU</MenuItem>
             </Select>
           </FormControl>
         </div>

@@ -3,7 +3,6 @@ import { RenderingPipeline } from '../helpers/renderingPipelineHelper';
 import { SegmentationConfig } from '../helpers/segmentationHelper';
 import { SourcePlayback } from '../helpers/sourceHelper';
 import { TFLite } from './useTFLite';
-import { buildCanvas2dPipeline } from '../../pipelines/canvas2d/canvas2dPipeline';
 import { buildWebGL2Pipeline } from '../../pipelines/webgl2/webgl2Pipeline';
 import { useEffect, useRef, useState } from 'react';
 
@@ -35,18 +34,9 @@ function useRenderingPipeline(
     const newPipeline =
       canvasRef.current === null
         ? null
-        : segmentationConfig.pipeline === 'webgl2'
-        ? buildWebGL2Pipeline(
+        : buildWebGL2Pipeline(
             sourcePlayback,
             backgroundImageRef.current,
-            backgroundConfig,
-            segmentationConfig,
-            canvasRef.current,
-            tflite,
-            addFrameEvent,
-          )
-        : buildCanvas2dPipeline(
-            sourcePlayback,
             backgroundConfig,
             segmentationConfig,
             canvasRef.current,

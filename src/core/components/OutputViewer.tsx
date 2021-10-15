@@ -9,11 +9,11 @@ import React, { useEffect, useRef } from 'react';
 import Typography from '@material-ui/core/Typography';
 
 type OutputViewerProps = {
-  sourcePlayback: SourcePlayback;
+  sourcePlayback?: SourcePlayback;
   backgroundConfig: BackgroundConfig;
   segmentationConfig: SegmentationConfig;
   postProcessingConfig: PostProcessingConfig;
-  tflite: TFLite;
+  tflite?: TFLite;
 };
 
 function OutputViewer(props: OutputViewerProps) {

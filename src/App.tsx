@@ -1,4 +1,4 @@
-import { BackgroundConfig, backgroundImageUrls } from './core/helpers/backgroundHelper';
+import { BackgroundConfig } from './core/helpers/backgroundHelper';
 import { PostProcessingConfig } from './core/helpers/postProcessingHelper';
 import { SegmentationConfig } from './core/helpers/segmentationHelper';
 import { SourceConfig, sourceVideoUrls } from './core/helpers/sourceHelper';
@@ -15,11 +15,10 @@ function App() {
   const classes = useStyles();
   const [sourceConfig, setSourceConfig] = useState<SourceConfig>({
     type: 'video',
-    url: sourceVideoUrls[0],
+    url: sourceVideoUrls[1],
   });
   const [backgroundConfig, setBackgroundConfig] = useState<BackgroundConfig>({
-    type: 'image',
-    url: backgroundImageUrls[0],
+    type: 'blur',
   });
   const [segmentationConfig, setSegmentationConfig] = useState<SegmentationConfig>({
     model: 'meet',

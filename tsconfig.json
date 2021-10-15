@@ -8,8 +8,8 @@
     "removeComments": false,
     "noImplicitAny": true,
     "strictNullChecks": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedLocals": false, // TODO
+    "noUnusedParameters": false, // TODO
     "noImplicitReturns": true,
     "noEmitOnError": true,
     "noImplicitThis": true,

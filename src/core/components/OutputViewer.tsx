@@ -4,7 +4,7 @@ import { SegmentationConfig } from '../helpers/segmentationHelper';
 import { SourcePlayback } from '../helpers/sourceHelper';
 import { TFLite } from '../hooks/useTFLite';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Typography from '@material-ui/core/Typography';
 import useRenderingPipeline from '../hooks/useRenderingPipeline';
 
@@ -17,20 +17,30 @@ type OutputViewerProps = {
 };
 
 function OutputViewer(props: OutputViewerProps) {
+  const { sourcePlayback, backgroundConfig, segmentationConfig, postProcessingConfig, tflite } = props;
+
+  const videoRef = useRef<HTMLVideoElement>(null);
+
   const classes = useStyles();
   const {
     pipeline,
     backgroundImageRef,
-    canvasRef,
     fps,
     durations: [resizingDuration, inferenceDuration, postProcessingDuration],
-  } = useRenderingPipeline(props.sourcePlayback, props.backgroundConfig, props.segmentationConfig, props.tflite);
+    canvasMediaStreamState,
+  } = useRenderingPipeline(sourcePlayback, backgroundConfig, segmentationConfig, tflite);
+
+  useEffect(() => {
+    if (videoRef.current !== null) {
+      videoRef.current.srcObject = canvasMediaStreamState;
+    }
+  }, [canvasMediaStreamState]);
 
   useEffect(() => {
     if (pipeline !== null) {
-      pipeline.updatePostProcessingConfig(props.postProcessingConfig);
+      pipeline.updatePostProcessingConfig(postProcessingConfig);
     }
-  }, [pipeline, props.postProcessingConfig]);
+  }, [pipeline, postProcessingConfig]);
 
   const statDetails = [
     `resizing ${resizingDuration}ms`,
@@ -41,24 +51,10 @@ function OutputViewer(props: OutputViewerProps) {
 
   return (
     <div className={classes.root}>
-      {props.backgroundConfig.type === 'image' && (
-        <img
-          ref={backgroundImageRef}
-          className={classes.render}
-          src={props.backgroundConfig.url}
-          alt=""
-          hidden={props.segmentationConfig.pipeline === 'webgl2'}
-        />
+      {backgroundConfig.type === 'image' && (
+        <img ref={backgroundImageRef} className={classes.render} src={backgroundConfig.url} alt="" />
       )}
-      <canvas
-        // The key attribute is required to create a new canvas when switching
-        // context mode
-        key={props.segmentationConfig.pipeline}
-        ref={canvasRef}
-        className={classes.render}
-        width={props.sourcePlayback.width}
-        height={props.sourcePlayback.height}
-      />
+      <video className={classes.render} ref={videoRef} autoPlay playsInline controls={false} muted loop />
       <Typography className={classes.stats} variant="caption">
         {stats}
       </Typography>

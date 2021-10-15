@@ -60,11 +60,7 @@ function App() {
         isSIMDSupported={isSIMDSupported}
         onChange={setSegmentationConfig}
       />
-      <PostProcessingConfigCard
-        config={postProcessingConfig}
-        pipeline={segmentationConfig.pipeline}
-        onChange={setPostProcessingConfig}
-      />
+      <PostProcessingConfigCard config={postProcessingConfig} onChange={setPostProcessingConfig} />
     </div>
   );
 }

@@ -4,7 +4,6 @@ import { SegmentationConfig } from '../helpers/segmentationHelper';
 import { SourceConfig, SourcePlayback } from '../helpers/sourceHelper';
 import { TFLite } from '../hooks/useTFLite';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
 import OutputViewer from './OutputViewer';
 import Paper from '@material-ui/core/Paper';
 import React, { useEffect, useState } from 'react';
@@ -31,7 +30,7 @@ function ViewerCard(props: ViewerCardProps) {
   return (
     <Paper className={classes.root}>
       <SourceViewer sourceConfig={sourceConfig} onLoad={setSourcePlayback} />
-      {sourcePlayback !== undefined && tflite !== undefined ? (
+      {sourcePlayback !== undefined && tflite !== undefined && (
         <OutputViewer
           sourcePlayback={sourcePlayback}
           backgroundConfig={backgroundConfig}
@@ -39,10 +38,6 @@ function ViewerCard(props: ViewerCardProps) {
           postProcessingConfig={postProcessingConfig}
           tflite={tflite}
         />
-      ) : (
-        <div className={classes.noOutput}>
-          <Avatar className={classes.avatar} />
-        </div>
       )}
     </Paper>
   );

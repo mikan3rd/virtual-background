@@ -13,12 +13,16 @@ declare global {
   }
 }
 
-function useRenderingPipeline(
-  sourcePlayback: SourcePlayback,
-  backgroundConfig: BackgroundConfig,
-  segmentationConfig: SegmentationConfig,
-  tflite: TFLite,
-) {
+type Props = {
+  sourcePlayback?: SourcePlayback;
+  backgroundConfig: BackgroundConfig;
+  segmentationConfig: SegmentationConfig;
+  tflite?: TFLite;
+};
+
+export function useRenderingPipeline(props: Props) {
+  const { sourcePlayback, backgroundConfig, segmentationConfig, tflite } = props;
+
   const [pipeline, setPipeline] = useState<RenderingPipeline | null>(null);
   const backgroundImageRef = useRef<HTMLImageElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(document.createElement('canvas'));
@@ -34,6 +38,12 @@ function useRenderingPipeline(
   }, []);
 
   useEffect(() => {
+    if (sourcePlayback === undefined || tflite === undefined) {
+      return () => {
+        setPipeline(null);
+      };
+    }
+
     // The useEffect cleanup function is not enough to stop
     // the rendering loop when the framerate is low
     let shouldRender = true;
@@ -124,5 +134,3 @@ function useRenderingPipeline(
     canvasMediaStreamState,
   };
 }
-
-export default useRenderingPipeline;

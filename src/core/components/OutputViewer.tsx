@@ -4,9 +4,9 @@ import { SegmentationConfig } from '../helpers/segmentationHelper';
 import { SourcePlayback } from '../helpers/sourceHelper';
 import { TFLite } from '../hooks/useTFLite';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+import { useRenderingPipeline } from '../hooks/useRenderingPipeline';
 import React, { useEffect, useRef } from 'react';
 import Typography from '@material-ui/core/Typography';
-import useRenderingPipeline from '../hooks/useRenderingPipeline';
 
 type OutputViewerProps = {
   sourcePlayback: SourcePlayback;
@@ -28,7 +28,7 @@ function OutputViewer(props: OutputViewerProps) {
     fps,
     durations: [resizingDuration, inferenceDuration, postProcessingDuration],
     canvasMediaStreamState,
-  } = useRenderingPipeline(sourcePlayback, backgroundConfig, segmentationConfig, tflite);
+  } = useRenderingPipeline({ sourcePlayback, backgroundConfig, segmentationConfig, tflite });
 
   useEffect(() => {
     if (videoRef.current !== null) {

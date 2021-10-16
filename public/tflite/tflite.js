@@ -19,5 +19,3 @@ else if (typeof define === 'function' && define['amd'])
   define([], function() { return createTFLiteModule; });
 else if (typeof exports === 'object')
   exports["createTFLiteModule"] = createTFLiteModule;
-
-console.log("tflite.js loadted!!!!")

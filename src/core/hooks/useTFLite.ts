@@ -27,7 +27,11 @@ function useTFLite(segmentationConfig: SegmentationConfig) {
   const isLoadingModelRef = useRef(false);
 
   useEffect(() => {
+    const tfliteId = `tflite`;
+    document.getElementById(tfliteId)?.remove();
+
     const scriptElement = document.createElement('script');
+    scriptElement.id = tfliteId;
     scriptElement.setAttribute('src', `${window.location.origin}/tflite/tflite.js`);
     scriptElement.onload = async () => {
       const _tflite = await createTFLiteModule();
@@ -37,7 +41,11 @@ function useTFLite(segmentationConfig: SegmentationConfig) {
   }, []);
 
   useEffect(() => {
+    const tfliteSimdId = `tflite-simd`;
+    document.getElementById(tfliteSimdId)?.remove();
+
     const scriptElement = document.createElement('script');
+    scriptElement.id = tfliteSimdId;
     scriptElement.setAttribute('src', `${window.location.origin}/tflite/tflite-simd.js`);
     scriptElement.onload = async () => {
       try {

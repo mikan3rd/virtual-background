@@ -14,6 +14,8 @@ type SourceConfigCardProps = {
 };
 
 function SourceConfigCard(props: SourceConfigCardProps) {
+  const { config, onChange } = props;
+
   const classes = useStyles();
 
   return (
@@ -22,15 +24,15 @@ function SourceConfigCard(props: SourceConfigCardProps) {
         <Typography gutterBottom variant="h6" component="h2">
           Source
         </Typography>
-        <SelectionIconButton active={props.config.type === 'camera'} onClick={() => props.onChange({ type: 'camera' })}>
+        <SelectionIconButton active={config.type === 'camera'} onClick={() => onChange({ type: 'camera' })}>
           <VideocamIcon />
         </SelectionIconButton>
         {sourceVideoUrls.map(videoUrl => (
           <VideoButton
             key={videoUrl}
             videoUrl={videoUrl}
-            active={videoUrl === props.config.url}
-            onClick={() => props.onChange({ type: 'video', url: videoUrl })}
+            active={videoUrl === config.url}
+            onClick={() => onChange({ type: 'video', url: videoUrl })}
           />
         ))}
       </CardContent>

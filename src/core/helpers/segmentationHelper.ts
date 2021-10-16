@@ -16,7 +16,3 @@ export type SegmentationConfig = {
   inputResolution: InputResolution;
   pipeline: PipelineName;
 };
-
-export function getTFLiteModelFileName(_model: SegmentationModel, _inputResolution: InputResolution) {
-  return 'segm_lite_v681';
-}

@@ -1,5 +1,5 @@
-import { SegmentationConfig, getTFLiteModelFileName } from '../helpers/segmentationHelper';
-import { useEffect, useState } from 'react';
+import { SegmentationConfig } from '../helpers/segmentationHelper';
+import { useEffect, useRef, useState } from 'react';
 
 declare function createTFLiteModule(): Promise<TFLite>;
 declare function createTFLiteSIMDModule(): Promise<TFLite>;
@@ -23,6 +23,8 @@ function useTFLite(segmentationConfig: SegmentationConfig) {
   const [tfliteSIMD, setTFLiteSIMD] = useState<TFLite>();
   const [selectedTFLite, setSelectedTFLite] = useState<TFLite>();
   const [isSIMDSupported, setSIMDSupported] = useState(false);
+
+  const isLoadingModelRef = useRef(false);
 
   useEffect(() => {
     const scriptElement = document.createElement('script');
@@ -67,7 +69,13 @@ function useTFLite(segmentationConfig: SegmentationConfig) {
         throw new Error(`TFLite backend unavailable: ${segmentationConfig.backend}`);
       }
 
-      const modelFileName = getTFLiteModelFileName(segmentationConfig.model, segmentationConfig.inputResolution);
+      if (isLoadingModelRef.current) {
+        return;
+      }
+
+      isLoadingModelRef.current = true;
+
+      const modelFileName = 'segm_lite_v681';
       console.log('Loading tflite model:', modelFileName);
 
       const tflitePath = `${window.location.origin}/models/${modelFileName}.tflite`;

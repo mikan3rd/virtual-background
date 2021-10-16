@@ -60,7 +60,9 @@ function useTFLite(segmentationConfig: SegmentationConfig) {
       const modelFileName = getTFLiteModelFileName(segmentationConfig.model, segmentationConfig.inputResolution);
       console.log('Loading tflite model:', modelFileName);
 
-      const modelResponse = await fetch(`${process.env.PUBLIC_URL}/models/${modelFileName}.tflite`);
+      const tflitePath = `${window.location.origin}/models/${modelFileName}.tflite`;
+      console.log(tflitePath);
+      const modelResponse = await fetch(tflitePath);
       const model = await modelResponse.arrayBuffer();
       console.log('Model buffer size:', model.byteLength);
 

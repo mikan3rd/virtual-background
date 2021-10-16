@@ -25,8 +25,19 @@ function useTFLite(segmentationConfig: SegmentationConfig) {
   const [isSIMDSupported, setSIMDSupported] = useState(false);
 
   useEffect(() => {
-    async function loadTFLite() {
-      createTFLiteModule().then(setTFLite);
+    const scriptElement = document.createElement('script');
+    scriptElement.setAttribute('src', `${window.location.origin}/tflite/tflite.js`);
+    scriptElement.onload = async () => {
+      const _tflite = await createTFLiteModule();
+      setTFLite(_tflite);
+    };
+    document.head.appendChild(scriptElement);
+  }, []);
+
+  useEffect(() => {
+    const scriptElement = document.createElement('script');
+    scriptElement.setAttribute('src', `${window.location.origin}/tflite/tflite-simd.js`);
+    scriptElement.onload = async () => {
       try {
         const createdTFLiteSIMD = await createTFLiteSIMDModule();
         setTFLiteSIMD(createdTFLiteSIMD);
@@ -34,9 +45,8 @@ function useTFLite(segmentationConfig: SegmentationConfig) {
       } catch (error) {
         console.warn('Failed to create TFLite SIMD WebAssembly module.', error);
       }
-    }
-
-    loadTFLite();
+    };
+    document.head.appendChild(scriptElement);
   }, []);
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 import { BackgroundConfig } from './core/helpers/backgroundHelper';
 import { PostProcessingConfig } from './core/helpers/postProcessingHelper';
-import { SegmentationConfig } from './core/helpers/segmentationHelper';
+import { SegmentationBackend } from './core/helpers/segmentationHelper';
 import { SourceConfig, sourceVideoUrls } from './core/helpers/sourceHelper';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import BackgroundConfigCard from './core/components/BackgroundConfigCard';
@@ -20,12 +20,7 @@ function App() {
   const [backgroundConfig, setBackgroundConfig] = useState<BackgroundConfig>({
     type: 'blur',
   });
-  const [segmentationConfig, setSegmentationConfig] = useState<SegmentationConfig>({
-    model: 'meet',
-    backend: 'wasm',
-    inputResolution: '160x96',
-    pipeline: 'webgl2',
-  });
+  const [segmentationBackend, setSegmentationBackend] = useState<SegmentationBackend>('wasm');
   const [postProcessingConfig, setPostProcessingConfig] = useState<PostProcessingConfig>({
     smoothSegmentationMask: true,
     jointBilateralFilter: { sigmaSpace: 1, sigmaColor: 0.1 },
@@ -34,12 +29,12 @@ function App() {
     blendMode: 'screen',
   });
 
-  const { tflite, isSIMDSupported } = useTFLite(segmentationConfig);
+  const { tflite, isSIMDSupported } = useTFLite(segmentationBackend);
 
   useEffect(() => {
-    setSegmentationConfig(previousSegmentationConfig => {
-      if (previousSegmentationConfig.backend === 'wasm' && isSIMDSupported) {
-        return { ...previousSegmentationConfig, backend: 'wasmSimd' };
+    setSegmentationBackend(previousSegmentationConfig => {
+      if (previousSegmentationConfig === 'wasm' && isSIMDSupported) {
+        return 'wasmSimd';
       }
       return previousSegmentationConfig;
     });
@@ -50,16 +45,16 @@ function App() {
       <ViewerCard
         sourceConfig={sourceConfig}
         backgroundConfig={backgroundConfig}
-        segmentationConfig={segmentationConfig}
+        segmentationBackend={segmentationBackend}
         postProcessingConfig={postProcessingConfig}
         tflite={tflite}
       />
       <SourceConfigCard config={sourceConfig} onChange={setSourceConfig} />
       <BackgroundConfigCard config={backgroundConfig} onChange={setBackgroundConfig} />
       <SegmentationConfigCard
-        config={segmentationConfig}
+        backend={segmentationBackend}
         isSIMDSupported={isSIMDSupported}
-        onChange={setSegmentationConfig}
+        onChange={setSegmentationBackend}
       />
       <PostProcessingConfigCard config={postProcessingConfig} onChange={setPostProcessingConfig} />
     </div>

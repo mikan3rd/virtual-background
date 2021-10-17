@@ -1,4 +1,4 @@
-import { SegmentationConfig, inputResolutions } from '../../core/helpers/segmentationHelper';
+import { SegmentationBackend, inputResolution } from '../../core/helpers/segmentationHelper';
 import { compileShader, createPiplelineStageProgram, glsl } from '../helpers/webglHelper';
 
 export function buildJointBilateralFilterStage(
@@ -7,7 +7,7 @@ export function buildJointBilateralFilterStage(
   positionBuffer: WebGLBuffer,
   texCoordBuffer: WebGLBuffer,
   inputTexture: WebGLTexture,
-  segmentationConfig: SegmentationConfig,
+  segmentationBackend: SegmentationBackend,
   outputTexture: WebGLTexture,
   canvas: HTMLCanvasElement,
 ) {
@@ -63,7 +63,7 @@ export function buildJointBilateralFilterStage(
     }
   `;
 
-  const [segmentationWidth, segmentationHeight] = inputResolutions[segmentationConfig.inputResolution];
+  const [segmentationWidth, segmentationHeight] = inputResolution;
   const { width: outputWidth, height: outputHeight } = canvas;
   const texelWidth = 1 / outputWidth;
   const texelHeight = 1 / outputHeight;

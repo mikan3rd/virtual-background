@@ -1,4 +1,4 @@
-import { SegmentationConfig, inputResolutions } from '../../core/helpers/segmentationHelper';
+import { inputResolution, SegmentationBackend } from '../../core/helpers/segmentationHelper';
 import { TFLite } from '../../core/hooks/useTFLite';
 import { compileShader, createPiplelineStageProgram, createTexture, glsl } from '../helpers/webglHelper';
 
@@ -7,7 +7,7 @@ export function buildLoadSegmentationStage(
   vertexShader: WebGLShader,
   positionBuffer: WebGLBuffer,
   texCoordBuffer: WebGLBuffer,
-  segmentationConfig: SegmentationConfig,
+  segmentationBackend: SegmentationBackend,
   tflite: TFLite,
   outputTexture: WebGLTexture,
 ) {
@@ -30,7 +30,7 @@ export function buildLoadSegmentationStage(
   // TFLite memory will be accessed as float32
   const tfliteOutputMemoryOffset = tflite._getOutputMemoryOffset() / 4;
 
-  const [segmentationWidth, segmentationHeight] = inputResolutions[segmentationConfig.inputResolution];
+  const [segmentationWidth, segmentationHeight] = inputResolution;
 
   const fragmentShader = compileShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
   const program = createPiplelineStageProgram(gl, vertexShader, fragmentShader, positionBuffer, texCoordBuffer);

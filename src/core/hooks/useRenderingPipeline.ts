@@ -1,7 +1,6 @@
 import { BackgroundConfig } from '../helpers/backgroundHelper';
 import { RenderingPipeline } from '../helpers/renderingPipelineHelper';
-import { SegmentationConfig } from '../helpers/segmentationHelper';
-import { SourcePlayback } from '../helpers/sourceHelper';
+import { SegmentationBackend } from '../helpers/segmentationHelper';
 import { TFLite } from './useTFLite';
 import { buildWebGL2Pipeline } from '../../pipelines/webgl2/webgl2Pipeline';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -14,14 +13,14 @@ declare global {
 }
 
 type Props = {
-  sourcePlayback?: SourcePlayback;
+  sourceVideoElement?: HTMLVideoElement;
   backgroundConfig: BackgroundConfig;
-  segmentationConfig: SegmentationConfig;
+  segmentationBackend: SegmentationBackend;
   tflite?: TFLite;
 };
 
 export function useRenderingPipeline(props: Props) {
-  const { sourcePlayback, backgroundConfig, segmentationConfig, tflite } = props;
+  const { sourceVideoElement, backgroundConfig, segmentationBackend, tflite } = props;
 
   const [pipeline, setPipeline] = useState<RenderingPipeline | null>(null);
   const backgroundImageRef = useRef<HTMLImageElement>(null);
@@ -38,7 +37,7 @@ export function useRenderingPipeline(props: Props) {
   }, []);
 
   useEffect(() => {
-    if (sourcePlayback === undefined || tflite === undefined) {
+    if (sourceVideoElement === undefined || tflite === undefined) {
       return () => {
         setPipeline(null);
       };
@@ -56,14 +55,14 @@ export function useRenderingPipeline(props: Props) {
 
     let renderRequestId: number;
 
-    canvasRef.current.width = sourcePlayback.width;
-    canvasRef.current.height = sourcePlayback.height;
+    canvasRef.current.width = sourceVideoElement.videoWidth;
+    canvasRef.current.height = sourceVideoElement.videoHeight;
 
     const newPipeline = buildWebGL2Pipeline(
-      sourcePlayback,
+      sourceVideoElement,
       backgroundImageRef.current,
       backgroundConfig,
-      segmentationConfig,
+      segmentationBackend,
       canvasRef.current,
       tflite,
       addFrameEvent,
@@ -105,26 +104,24 @@ export function useRenderingPipeline(props: Props) {
     }
 
     render();
-    console.log('Animation started:', sourcePlayback, backgroundConfig, segmentationConfig);
+    console.log('Animation started:', sourceVideoElement, backgroundConfig, segmentationBackend);
 
     setPipeline(newPipeline);
 
-    if (canvasMediaStreamRef.current !== null) {
-      canvasMediaStreamRef.current.getTracks().forEach(track => {
-        track.stop();
-      });
-    }
+    canvasMediaStreamRef.current?.getTracks().forEach(track => {
+      track.stop();
+    });
     setCanvasMediaStream(canvasRef.current.captureStream());
 
     return () => {
       shouldRender = false;
       cancelAnimationFrame(renderRequestId);
       newPipeline.cleanUp();
-      console.log('Animation stopped:', sourcePlayback, backgroundConfig, segmentationConfig);
+      console.log('Animation stopped:', sourceVideoElement, backgroundConfig, segmentationBackend);
 
       setPipeline(null);
     };
-  }, [sourcePlayback, backgroundConfig, segmentationConfig, tflite, setCanvasMediaStream]);
+  }, [sourceVideoElement, backgroundConfig, segmentationBackend, tflite, setCanvasMediaStream]);
 
   return {
     pipeline,

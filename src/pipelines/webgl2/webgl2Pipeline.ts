@@ -2,8 +2,7 @@ import { BackgroundBlurStage, buildBackgroundBlurStage } from './backgroundBlurS
 import { BackgroundConfig } from '../../core/helpers/backgroundHelper';
 import { BackgroundImageStage, buildBackgroundImageStage } from './backgroundImageStage';
 import { PostProcessingConfig } from '../../core/helpers/postProcessingHelper';
-import { SegmentationConfig, inputResolutions } from '../../core/helpers/segmentationHelper';
-import { SourcePlayback } from '../../core/helpers/sourceHelper';
+import { SegmentationBackend, inputResolution } from '../../core/helpers/segmentationHelper';
 import { TFLite } from '../../core/hooks/useTFLite';
 import { buildJointBilateralFilterStage } from './jointBilateralFilterStage';
 import { buildResizingStage } from './resizingStage';
@@ -11,10 +10,10 @@ import { buildSoftmaxStage } from './softmaxStage';
 import { compileShader, createTexture, glsl } from '../helpers/webglHelper';
 
 export function buildWebGL2Pipeline(
-  sourcePlayback: SourcePlayback,
+  sourceVideoElement: HTMLVideoElement,
   backgroundImage: HTMLImageElement | null,
   backgroundConfig: BackgroundConfig,
-  segmentationConfig: SegmentationConfig,
+  segmentationBackend: SegmentationBackend,
   canvas: HTMLCanvasElement,
   tflite: TFLite,
   addFrameEvent: () => void,
@@ -32,8 +31,8 @@ export function buildWebGL2Pipeline(
     }
   `;
 
-  const { width: frameWidth, height: frameHeight } = sourcePlayback;
-  const [segmentationWidth, segmentationHeight] = inputResolutions[segmentationConfig.inputResolution];
+  const { videoWidth: frameWidth, videoHeight: frameHeight } = sourceVideoElement;
+  const [segmentationWidth, segmentationHeight] = inputResolution;
 
   const gl = canvas.getContext('webgl2');
   if (gl === null) {
@@ -88,7 +87,7 @@ export function buildWebGL2Pipeline(
     vertexShader,
     positionBuffer,
     texCoordBuffer,
-    segmentationConfig,
+    segmentationBackend,
     tflite,
   );
   const loadSegmentationStage = buildSoftmaxStage(
@@ -96,7 +95,7 @@ export function buildWebGL2Pipeline(
     vertexShader,
     positionBuffer,
     texCoordBuffer,
-    segmentationConfig,
+    segmentationBackend,
     tflite,
     segmentationTexture,
   );
@@ -106,7 +105,7 @@ export function buildWebGL2Pipeline(
     positionBuffer,
     texCoordBuffer,
     segmentationTexture,
-    segmentationConfig,
+    segmentationBackend,
     personMaskTexture,
     canvas,
   );
@@ -128,7 +127,7 @@ export function buildWebGL2Pipeline(
 
     // texImage2D seems faster than texSubImage2D to upload
     // video texture
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, sourcePlayback.htmlElement);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, sourceVideoElement);
 
     gl.bindVertexArray(vertexArray);
 

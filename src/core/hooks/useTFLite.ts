@@ -1,4 +1,4 @@
-import { SegmentationConfig } from '../helpers/segmentationHelper';
+import { SegmentationBackend } from '../helpers/segmentationHelper';
 import { useEffect, useRef, useState } from 'react';
 
 declare function createTFLiteModule(): Promise<TFLite>;
@@ -18,7 +18,7 @@ export type TFLite = {
   _runInference(): number;
 } & EmscriptenModule;
 
-function useTFLite(segmentationConfig: SegmentationConfig) {
+function useTFLite(segmentationBackend: SegmentationBackend) {
   const [tflite, setTFLite] = useState<TFLite>();
   const [tfliteSIMD, setTFLiteSIMD] = useState<TFLite>();
   const [selectedTFLite, setSelectedTFLite] = useState<TFLite>();
@@ -68,17 +68,17 @@ function useTFLite(segmentationConfig: SegmentationConfig) {
       if (
         tflite === undefined ||
         (isSIMDSupported && tfliteSIMD === undefined) ||
-        (!isSIMDSupported && segmentationConfig.backend === 'wasmSimd')
+        (!isSIMDSupported && segmentationBackend === 'wasmSimd')
       ) {
         return;
       }
 
       setSelectedTFLite(undefined);
 
-      const newSelectedTFLite = segmentationConfig.backend === 'wasmSimd' ? tfliteSIMD : tflite;
+      const newSelectedTFLite = segmentationBackend === 'wasmSimd' ? tfliteSIMD : tflite;
 
       if (newSelectedTFLite === undefined) {
-        throw new Error(`TFLite backend unavailable: ${segmentationConfig.backend}`);
+        throw new Error(`TFLite backend unavailable: ${segmentationBackend}`);
       }
 
       if (isLoadingModelRef.current) {
@@ -116,14 +116,7 @@ function useTFLite(segmentationConfig: SegmentationConfig) {
     }
 
     loadTFLiteModel();
-  }, [
-    tflite,
-    tfliteSIMD,
-    isSIMDSupported,
-    segmentationConfig.model,
-    segmentationConfig.backend,
-    segmentationConfig.inputResolution,
-  ]);
+  }, [tflite, tfliteSIMD, isSIMDSupported, segmentationBackend]);
 
   return { tflite: selectedTFLite, isSIMDSupported };
 }

@@ -1,7 +1,7 @@
 import { BackgroundConfig } from '../helpers/backgroundHelper';
 import { PostProcessingConfig } from '../helpers/postProcessingHelper';
 import { SegmentationConfig } from '../helpers/segmentationHelper';
-import { SourceConfig, SourcePlayback } from '../helpers/sourceHelper';
+import { SourceConfig } from '../helpers/sourceHelper';
 import { TFLite } from '../hooks/useTFLite';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import OutputViewer from './OutputViewer';
@@ -21,7 +21,7 @@ function ViewerCard(props: ViewerCardProps) {
   const { sourceConfig, backgroundConfig, segmentationConfig, postProcessingConfig, tflite } = props;
 
   const classes = useStyles();
-  const [sourcePlayback, setSourcePlayback] = useState<SourcePlayback>();
+  const [sourceVideoElement, setSourcePlayback] = useState<HTMLVideoElement>();
 
   useEffect(() => {
     setSourcePlayback(undefined);
@@ -31,7 +31,7 @@ function ViewerCard(props: ViewerCardProps) {
     <Paper className={classes.root}>
       <SourceViewer sourceConfig={sourceConfig} onLoad={setSourcePlayback} />
       <OutputViewer
-        sourcePlayback={sourcePlayback}
+        sourceVideoElement={sourceVideoElement}
         backgroundConfig={backgroundConfig}
         segmentationConfig={segmentationConfig}
         postProcessingConfig={postProcessingConfig}

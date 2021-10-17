@@ -3,7 +3,6 @@ import { BackgroundConfig } from '../../core/helpers/backgroundHelper';
 import { BackgroundImageStage, buildBackgroundImageStage } from './backgroundImageStage';
 import { PostProcessingConfig } from '../../core/helpers/postProcessingHelper';
 import { SegmentationConfig, inputResolutions } from '../../core/helpers/segmentationHelper';
-import { SourcePlayback } from '../../core/helpers/sourceHelper';
 import { TFLite } from '../../core/hooks/useTFLite';
 import { buildJointBilateralFilterStage } from './jointBilateralFilterStage';
 import { buildResizingStage } from './resizingStage';
@@ -11,7 +10,7 @@ import { buildSoftmaxStage } from './softmaxStage';
 import { compileShader, createTexture, glsl } from '../helpers/webglHelper';
 
 export function buildWebGL2Pipeline(
-  sourcePlayback: SourcePlayback,
+  sourceVideoElement: HTMLVideoElement,
   backgroundImage: HTMLImageElement | null,
   backgroundConfig: BackgroundConfig,
   segmentationConfig: SegmentationConfig,
@@ -32,7 +31,7 @@ export function buildWebGL2Pipeline(
     }
   `;
 
-  const { width: frameWidth, height: frameHeight } = sourcePlayback;
+  const { videoWidth: frameWidth, videoHeight: frameHeight } = sourceVideoElement;
   const [segmentationWidth, segmentationHeight] = inputResolutions[segmentationConfig.inputResolution];
 
   const gl = canvas.getContext('webgl2');
@@ -128,7 +127,7 @@ export function buildWebGL2Pipeline(
 
     // texImage2D seems faster than texSubImage2D to upload
     // video texture
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, sourcePlayback.htmlElement);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, sourceVideoElement);
 
     gl.bindVertexArray(vertexArray);
 

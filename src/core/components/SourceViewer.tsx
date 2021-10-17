@@ -1,9 +1,9 @@
-import { SourceConfig, SourcePlayback } from '../helpers/sourceHelper';
+import { SourceConfig } from '../helpers/sourceHelper';
 import { useEffect, useRef } from 'react';
 
 type SourceViewerProps = {
   sourceConfig: SourceConfig;
-  onLoad: (sourcePlayback: SourcePlayback) => void;
+  onLoad: (sourceVideoElement: HTMLVideoElement) => void;
 };
 
 function SourceViewer(props: SourceViewerProps) {
@@ -19,11 +19,7 @@ function SourceViewer(props: SourceViewerProps) {
       videoRef.current.muted = true;
       videoRef.current.loop = true;
       videoRef.current.onloadeddata = () => {
-        onLoad({
-          htmlElement: videoRef.current,
-          width: videoRef.current.videoWidth,
-          height: videoRef.current.videoHeight,
-        });
+        onLoad(videoRef.current);
       };
       videoRef.current.play();
     }

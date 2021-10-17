@@ -3,12 +3,6 @@ export type SourceConfig = {
   url?: string;
 };
 
-export type SourcePlayback = {
-  htmlElement: HTMLVideoElement;
-  width: number;
-  height: number;
-};
-
 export const sourceImageUrls = ['girl-919048_1280', 'doctor-5871743_640', 'woman-5883428_1280'].map(
   imageName => `${process.env.PUBLIC_URL}/images/${imageName}.jpg`,
 );

@@ -2,7 +2,7 @@ import { BackgroundBlurStage, buildBackgroundBlurStage } from './backgroundBlurS
 import { BackgroundConfig } from '../../core/helpers/backgroundHelper';
 import { BackgroundImageStage, buildBackgroundImageStage } from './backgroundImageStage';
 import { PostProcessingConfig } from '../../core/helpers/postProcessingHelper';
-import { SegmentationConfig, inputResolutions } from '../../core/helpers/segmentationHelper';
+import { SegmentationConfig, inputResolution } from '../../core/helpers/segmentationHelper';
 import { TFLite } from '../../core/hooks/useTFLite';
 import { buildJointBilateralFilterStage } from './jointBilateralFilterStage';
 import { buildResizingStage } from './resizingStage';
@@ -32,7 +32,7 @@ export function buildWebGL2Pipeline(
   `;
 
   const { videoWidth: frameWidth, videoHeight: frameHeight } = sourceVideoElement;
-  const [segmentationWidth, segmentationHeight] = inputResolutions[segmentationConfig.inputResolution];
+  const [segmentationWidth, segmentationHeight] = inputResolution;
 
   const gl = canvas.getContext('webgl2');
   if (gl === null) {

@@ -23,7 +23,6 @@ function App() {
   const [segmentationConfig, setSegmentationConfig] = useState<SegmentationConfig>({
     model: 'meet',
     backend: 'wasm',
-    inputResolution: '160x96',
   });
   const [postProcessingConfig, setPostProcessingConfig] = useState<PostProcessingConfig>({
     smoothSegmentationMask: true,

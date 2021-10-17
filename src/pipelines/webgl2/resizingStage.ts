@@ -1,4 +1,4 @@
-import { SegmentationConfig, inputResolutions } from '../../core/helpers/segmentationHelper';
+import { SegmentationConfig, inputResolution } from '../../core/helpers/segmentationHelper';
 import { TFLite } from '../../core/hooks/useTFLite';
 import {
   compileShader,
@@ -34,7 +34,7 @@ export function buildResizingStage(
   // TFLite memory will be accessed as float32
   const tfliteInputMemoryOffset = tflite._getInputMemoryOffset() / 4;
 
-  const [outputWidth, outputHeight] = inputResolutions[segmentationConfig.inputResolution];
+  const [outputWidth, outputHeight] = inputResolution;
   const outputPixelCount = outputWidth * outputHeight;
 
   const fragmentShader = compileShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);

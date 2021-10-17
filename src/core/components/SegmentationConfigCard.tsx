@@ -1,9 +1,4 @@
-import {
-  InputResolution,
-  SegmentationBackend,
-  SegmentationConfig,
-  SegmentationModel,
-} from '../helpers/segmentationHelper';
+import { SegmentationBackend, SegmentationConfig, SegmentationModel } from '../helpers/segmentationHelper';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -28,16 +23,13 @@ function SegmentationConfigCard(props: SegmentationConfigCardProps) {
   function handleModelChange(event: ChangeEvent<{ value: unknown }>) {
     const model = event.target.value as SegmentationModel;
     let { backend } = config;
-    let { inputResolution } = config;
 
     backend = isSIMDSupported ? 'wasmSimd' : 'wasm';
-    inputResolution = '160x96';
 
     onChange({
       ...config,
       model,
       backend,
-      inputResolution,
     });
   }
 
@@ -45,13 +37,6 @@ function SegmentationConfigCard(props: SegmentationConfigCardProps) {
     onChange({
       ...config,
       backend: event.target.value as SegmentationBackend,
-    });
-  }
-
-  function handleInputResolutionChange(event: ChangeEvent<{ value: unknown }>) {
-    onChange({
-      ...config,
-      inputResolution: event.target.value as InputResolution,
     });
   }
 
@@ -75,12 +60,6 @@ function SegmentationConfigCard(props: SegmentationConfigCardProps) {
               <MenuItem value="wasmSimd" disabled={!isSIMDSupported}>
                 WebAssembly SIMD
               </MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl className={classes.formControl} variant="outlined">
-            <InputLabel>Input resolution</InputLabel>
-            <Select label="Input resolution" value={config.inputResolution} onChange={handleInputResolutionChange}>
-              <MenuItem value="160x96">160x96</MenuItem>
             </Select>
           </FormControl>
         </div>

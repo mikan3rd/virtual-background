@@ -82,14 +82,7 @@ export function buildWebGL2Pipeline(
     throw new Error('Failed to create person mask texture');
   }
 
-  const resizingStage = buildResizingStage(
-    gl,
-    vertexShader,
-    positionBuffer,
-    texCoordBuffer,
-    segmentationBackend,
-    tflite,
-  );
+  const resizingStage = buildResizingStage(gl, vertexShader, positionBuffer, texCoordBuffer, tflite);
   const loadSegmentationStage = buildSoftmaxStage(
     gl,
     vertexShader,
@@ -105,7 +98,6 @@ export function buildWebGL2Pipeline(
     positionBuffer,
     texCoordBuffer,
     segmentationTexture,
-    segmentationBackend,
     personMaskTexture,
     canvas,
   );

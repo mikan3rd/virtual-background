@@ -1,5 +1,5 @@
-import { SegmentationBackend, inputResolution } from '../../core/helpers/segmentationHelper';
 import { compileShader, createPiplelineStageProgram, glsl } from '../helpers/webglHelper';
+import { inputResolution } from '../../core/helpers/segmentationHelper';
 
 export function buildJointBilateralFilterStage(
   gl: WebGL2RenderingContext,
@@ -7,7 +7,6 @@ export function buildJointBilateralFilterStage(
   positionBuffer: WebGLBuffer,
   texCoordBuffer: WebGLBuffer,
   inputTexture: WebGLTexture,
-  segmentationBackend: SegmentationBackend,
   outputTexture: WebGLTexture,
   canvas: HTMLCanvasElement,
 ) {
@@ -103,6 +102,7 @@ export function buildJointBilateralFilterStage(
   }
 
   function updateSigmaSpace(sigmaSpace: number) {
+    // eslint-disable-next-line no-param-reassign
     sigmaSpace *= Math.max(outputWidth / segmentationWidth, outputHeight / segmentationHeight);
 
     const kSparsityFactor = 0.66; // Higher is more sparse.

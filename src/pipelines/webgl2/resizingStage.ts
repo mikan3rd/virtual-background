@@ -1,4 +1,3 @@
-import { SegmentationBackend, inputResolution } from '../../core/helpers/segmentationHelper';
 import { TFLite } from '../../core/hooks/useTFLite';
 import {
   compileShader,
@@ -7,13 +6,13 @@ import {
   glsl,
   readPixelsAsync,
 } from '../helpers/webglHelper';
+import { inputResolution } from '../../core/helpers/segmentationHelper';
 
 export function buildResizingStage(
   gl: WebGL2RenderingContext,
   vertexShader: WebGLShader,
   positionBuffer: WebGLBuffer,
   texCoordBuffer: WebGLBuffer,
-  segmentationBackend: SegmentationBackend,
   tflite: TFLite,
 ) {
   const fragmentShaderSource = glsl`#version 300 es
@@ -62,8 +61,11 @@ export function buildResizingStage(
     for (let i = 0; i < outputPixelCount; i++) {
       const tfliteIndex = tfliteInputMemoryOffset + i * 3;
       const outputIndex = i * 4;
+      // eslint-disable-next-line no-param-reassign
       tflite.HEAPF32[tfliteIndex] = outputPixels[outputIndex] / 255;
+      // eslint-disable-next-line no-param-reassign
       tflite.HEAPF32[tfliteIndex + 1] = outputPixels[outputIndex + 1] / 255;
+      // eslint-disable-next-line no-param-reassign
       tflite.HEAPF32[tfliteIndex + 2] = outputPixels[outputIndex + 2] / 255;
     }
   }

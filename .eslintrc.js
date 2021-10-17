@@ -172,7 +172,6 @@ module.exports = {
     // TODO
     '@typescript-eslint/no-explicit-any': ['off'],
     'no-underscore-dangle': ['off'],
-    'no-param-reassign': ['off'],
     '@typescript-eslint/no-floating-promises': ['off'],
     'no-console': ['off'],
     'react/jsx-no-bind': ['off'], // OK

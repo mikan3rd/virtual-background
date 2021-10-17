@@ -21,7 +21,6 @@ function App() {
     type: 'blur',
   });
   const [segmentationConfig, setSegmentationConfig] = useState<SegmentationConfig>({
-    model: 'meet',
     backend: 'wasm',
   });
   const [postProcessingConfig, setPostProcessingConfig] = useState<PostProcessingConfig>({

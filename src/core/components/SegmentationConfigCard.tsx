@@ -1,4 +1,4 @@
-import { SegmentationBackend, SegmentationConfig, SegmentationModel } from '../helpers/segmentationHelper';
+import { SegmentationBackend, SegmentationConfig } from '../helpers/segmentationHelper';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -20,19 +20,6 @@ function SegmentationConfigCard(props: SegmentationConfigCardProps) {
 
   const classes = useStyles();
 
-  function handleModelChange(event: ChangeEvent<{ value: unknown }>) {
-    const model = event.target.value as SegmentationModel;
-    let { backend } = config;
-
-    backend = isSIMDSupported ? 'wasmSimd' : 'wasm';
-
-    onChange({
-      ...config,
-      model,
-      backend,
-    });
-  }
-
   function handleBackendChange(event: ChangeEvent<{ value: unknown }>) {
     onChange({
       ...config,
@@ -47,12 +34,6 @@ function SegmentationConfigCard(props: SegmentationConfigCardProps) {
           Segmentation
         </Typography>
         <div className={classes.formControls}>
-          <FormControl className={classes.formControl} variant="outlined">
-            <InputLabel>Model</InputLabel>
-            <Select label="Model" value={config.model} onChange={handleModelChange}>
-              <MenuItem value="meet">Meet</MenuItem>
-            </Select>
-          </FormControl>
           <FormControl className={classes.formControl} variant="outlined">
             <InputLabel>Backend</InputLabel>
             <Select label="Backend" value={config.backend} onChange={handleBackendChange}>

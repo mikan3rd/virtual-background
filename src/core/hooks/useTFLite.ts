@@ -116,7 +116,7 @@ function useTFLite(segmentationConfig: SegmentationConfig) {
     }
 
     loadTFLiteModel();
-  }, [tflite, tfliteSIMD, isSIMDSupported, segmentationConfig.model, segmentationConfig.backend]);
+  }, [tflite, tfliteSIMD, isSIMDSupported, segmentationConfig.backend]);
 
   return { tflite: selectedTFLite, isSIMDSupported };
 }

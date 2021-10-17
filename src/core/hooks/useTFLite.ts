@@ -88,29 +88,17 @@ function useTFLite(segmentationBackend: SegmentationBackend) {
       isLoadingModelRef.current = true;
 
       const modelFileName = 'segm_lite_v681';
-      console.log('Loading tflite model:', modelFileName);
+      // console.log('Loading tflite model:', modelFileName);
 
       const tflitePath = `${window.location.origin}/models/${modelFileName}.tflite`;
-      console.log(tflitePath);
+      // console.log(tflitePath);
       const modelResponse = await fetch(tflitePath);
       const model = await modelResponse.arrayBuffer();
-      console.log('Model buffer size:', model.byteLength);
+      // console.log('Model buffer size:', model.byteLength);
 
       const modelBufferOffset = newSelectedTFLite._getModelBufferMemoryOffset();
-      // console.log('Model buffer memory offset:', modelBufferOffset);
-      // console.log('Loading model buffer...');
       newSelectedTFLite.HEAPU8.set(new Uint8Array(model), modelBufferOffset);
-      console.log('_loadModel result:', newSelectedTFLite._loadModel(model.byteLength));
-
-      // console.log('Input memory offset:', newSelectedTFLite._getInputMemoryOffset());
-      // console.log('Input height:', newSelectedTFLite._getInputHeight());
-      // console.log('Input width:', newSelectedTFLite._getInputWidth());
-      // console.log('Input channels:', newSelectedTFLite._getInputChannelCount());
-
-      // console.log('Output memory offset:', newSelectedTFLite._getOutputMemoryOffset());
-      // console.log('Output height:', newSelectedTFLite._getOutputHeight());
-      // console.log('Output width:', newSelectedTFLite._getOutputWidth());
-      // console.log('Output channels:', newSelectedTFLite._getOutputChannelCount());
+      newSelectedTFLite._loadModel(model.byteLength);
 
       setSelectedTFLite(newSelectedTFLite);
     }

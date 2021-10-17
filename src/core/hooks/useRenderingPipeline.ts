@@ -107,7 +107,7 @@ export function useRenderingPipeline(props: Props) {
 
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     render();
-    console.log('Animation started:', sourceVideoElement, backgroundConfig, segmentationBackend);
+    // console.log('Animation started:', sourceVideoElement, backgroundConfig, segmentationBackend);
 
     setPipeline(newPipeline);
 
@@ -120,7 +120,7 @@ export function useRenderingPipeline(props: Props) {
       shouldRender = false;
       cancelAnimationFrame(renderRequestId);
       newPipeline.cleanUp();
-      console.log('Animation stopped:', sourceVideoElement, backgroundConfig, segmentationBackend);
+      // console.log('Animation stopped:', sourceVideoElement, backgroundConfig, segmentationBackend);
 
       setPipeline(null);
     };

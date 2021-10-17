@@ -2,7 +2,7 @@ import { BackgroundBlurStage, buildBackgroundBlurStage } from './backgroundBlurS
 import { BackgroundConfig } from '../../core/helpers/backgroundHelper';
 import { BackgroundImageStage, buildBackgroundImageStage } from './backgroundImageStage';
 import { PostProcessingConfig } from '../../core/helpers/postProcessingHelper';
-import { SegmentationConfig, inputResolution } from '../../core/helpers/segmentationHelper';
+import { SegmentationBackend, inputResolution } from '../../core/helpers/segmentationHelper';
 import { TFLite } from '../../core/hooks/useTFLite';
 import { buildJointBilateralFilterStage } from './jointBilateralFilterStage';
 import { buildResizingStage } from './resizingStage';
@@ -13,7 +13,7 @@ export function buildWebGL2Pipeline(
   sourceVideoElement: HTMLVideoElement,
   backgroundImage: HTMLImageElement | null,
   backgroundConfig: BackgroundConfig,
-  segmentationConfig: SegmentationConfig,
+  segmentationBackend: SegmentationBackend,
   canvas: HTMLCanvasElement,
   tflite: TFLite,
   addFrameEvent: () => void,
@@ -87,7 +87,7 @@ export function buildWebGL2Pipeline(
     vertexShader,
     positionBuffer,
     texCoordBuffer,
-    segmentationConfig,
+    segmentationBackend,
     tflite,
   );
   const loadSegmentationStage = buildSoftmaxStage(
@@ -95,7 +95,7 @@ export function buildWebGL2Pipeline(
     vertexShader,
     positionBuffer,
     texCoordBuffer,
-    segmentationConfig,
+    segmentationBackend,
     tflite,
     segmentationTexture,
   );
@@ -105,7 +105,7 @@ export function buildWebGL2Pipeline(
     positionBuffer,
     texCoordBuffer,
     segmentationTexture,
-    segmentationConfig,
+    segmentationBackend,
     personMaskTexture,
     canvas,
   );

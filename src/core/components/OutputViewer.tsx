@@ -1,6 +1,6 @@
 import { BackgroundConfig } from '../helpers/backgroundHelper';
 import { PostProcessingConfig } from '../helpers/postProcessingHelper';
-import { SegmentationConfig } from '../helpers/segmentationHelper';
+import { SegmentationBackend } from '../helpers/segmentationHelper';
 import { TFLite } from '../hooks/useTFLite';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { useRenderingPipeline } from '../hooks/useRenderingPipeline';
@@ -10,13 +10,13 @@ import Typography from '@material-ui/core/Typography';
 type OutputViewerProps = {
   sourceVideoElement?: HTMLVideoElement;
   backgroundConfig: BackgroundConfig;
-  segmentationConfig: SegmentationConfig;
+  segmentationBackend: SegmentationBackend;
   postProcessingConfig: PostProcessingConfig;
   tflite?: TFLite;
 };
 
 function OutputViewer(props: OutputViewerProps) {
-  const { sourceVideoElement, backgroundConfig, segmentationConfig, postProcessingConfig, tflite } = props;
+  const { sourceVideoElement, backgroundConfig, segmentationBackend, postProcessingConfig, tflite } = props;
 
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -27,7 +27,7 @@ function OutputViewer(props: OutputViewerProps) {
     fps,
     durations: [resizingDuration, inferenceDuration, postProcessingDuration],
     canvasMediaStreamState,
-  } = useRenderingPipeline({ sourceVideoElement, backgroundConfig, segmentationConfig, tflite });
+  } = useRenderingPipeline({ sourceVideoElement, backgroundConfig, segmentationBackend, tflite });
 
   useEffect(() => {
     if (videoRef.current !== null) {

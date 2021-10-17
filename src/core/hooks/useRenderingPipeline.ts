@@ -1,6 +1,6 @@
 import { BackgroundConfig } from '../helpers/backgroundHelper';
 import { RenderingPipeline } from '../helpers/renderingPipelineHelper';
-import { SegmentationConfig } from '../helpers/segmentationHelper';
+import { SegmentationBackend } from '../helpers/segmentationHelper';
 import { TFLite } from './useTFLite';
 import { buildWebGL2Pipeline } from '../../pipelines/webgl2/webgl2Pipeline';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -15,12 +15,12 @@ declare global {
 type Props = {
   sourceVideoElement?: HTMLVideoElement;
   backgroundConfig: BackgroundConfig;
-  segmentationConfig: SegmentationConfig;
+  segmentationBackend: SegmentationBackend;
   tflite?: TFLite;
 };
 
 export function useRenderingPipeline(props: Props) {
-  const { sourceVideoElement, backgroundConfig, segmentationConfig, tflite } = props;
+  const { sourceVideoElement, backgroundConfig, segmentationBackend, tflite } = props;
 
   const [pipeline, setPipeline] = useState<RenderingPipeline | null>(null);
   const backgroundImageRef = useRef<HTMLImageElement>(null);
@@ -62,7 +62,7 @@ export function useRenderingPipeline(props: Props) {
       sourceVideoElement,
       backgroundImageRef.current,
       backgroundConfig,
-      segmentationConfig,
+      segmentationBackend,
       canvasRef.current,
       tflite,
       addFrameEvent,
@@ -104,7 +104,7 @@ export function useRenderingPipeline(props: Props) {
     }
 
     render();
-    console.log('Animation started:', sourceVideoElement, backgroundConfig, segmentationConfig);
+    console.log('Animation started:', sourceVideoElement, backgroundConfig, segmentationBackend);
 
     setPipeline(newPipeline);
 
@@ -117,11 +117,11 @@ export function useRenderingPipeline(props: Props) {
       shouldRender = false;
       cancelAnimationFrame(renderRequestId);
       newPipeline.cleanUp();
-      console.log('Animation stopped:', sourceVideoElement, backgroundConfig, segmentationConfig);
+      console.log('Animation stopped:', sourceVideoElement, backgroundConfig, segmentationBackend);
 
       setPipeline(null);
     };
-  }, [sourceVideoElement, backgroundConfig, segmentationConfig, tflite, setCanvasMediaStream]);
+  }, [sourceVideoElement, backgroundConfig, segmentationBackend, tflite, setCanvasMediaStream]);
 
   return {
     pipeline,

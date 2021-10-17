@@ -1,4 +1,4 @@
-import { SegmentationConfig, inputResolution } from '../../core/helpers/segmentationHelper';
+import { SegmentationBackend, inputResolution } from '../../core/helpers/segmentationHelper';
 import { TFLite } from '../../core/hooks/useTFLite';
 import {
   compileShader,
@@ -13,7 +13,7 @@ export function buildResizingStage(
   vertexShader: WebGLShader,
   positionBuffer: WebGLBuffer,
   texCoordBuffer: WebGLBuffer,
-  segmentationConfig: SegmentationConfig,
+  segmentationBackend: SegmentationBackend,
   tflite: TFLite,
 ) {
   const fragmentShaderSource = glsl`#version 300 es

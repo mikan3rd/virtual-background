@@ -24,7 +24,6 @@ function App() {
     model: 'meet',
     backend: 'wasm',
     inputResolution: '160x96',
-    pipeline: 'webgl2',
   });
   const [postProcessingConfig, setPostProcessingConfig] = useState<PostProcessingConfig>({
     smoothSegmentationMask: true,

@@ -1,6 +1,5 @@
 import {
   InputResolution,
-  PipelineName,
   SegmentationBackend,
   SegmentationConfig,
   SegmentationModel,
@@ -30,18 +29,15 @@ function SegmentationConfigCard(props: SegmentationConfigCardProps) {
     const model = event.target.value as SegmentationModel;
     let { backend } = config;
     let { inputResolution } = config;
-    let { pipeline } = config;
 
     backend = isSIMDSupported ? 'wasmSimd' : 'wasm';
     inputResolution = '160x96';
-    pipeline = 'webgl2';
 
     onChange({
       ...config,
       model,
       backend,
       inputResolution,
-      pipeline,
     });
   }
 
@@ -56,13 +52,6 @@ function SegmentationConfigCard(props: SegmentationConfigCardProps) {
     onChange({
       ...config,
       inputResolution: event.target.value as InputResolution,
-    });
-  }
-
-  function handlePipelineChange(event: ChangeEvent<{ value: unknown }>) {
-    onChange({
-      ...config,
-      pipeline: event.target.value as PipelineName,
     });
   }
 
@@ -92,12 +81,6 @@ function SegmentationConfigCard(props: SegmentationConfigCardProps) {
             <InputLabel>Input resolution</InputLabel>
             <Select label="Input resolution" value={config.inputResolution} onChange={handleInputResolutionChange}>
               <MenuItem value="160x96">160x96</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl className={classes.formControl} variant="outlined">
-            <InputLabel>Pipeline</InputLabel>
-            <Select label="Pipeline" value={config.pipeline} onChange={handlePipelineChange}>
-              <MenuItem value="webgl2">WebGL 2</MenuItem>
             </Select>
           </FormControl>
         </div>

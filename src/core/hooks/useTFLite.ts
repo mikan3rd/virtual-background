@@ -1,5 +1,5 @@
-import { SegmentationConfig, getTFLiteModelFileName } from '../helpers/segmentationHelper';
-import { useEffect, useState } from 'react';
+import { SegmentationConfig } from '../helpers/segmentationHelper';
+import { useEffect, useRef, useState } from 'react';
 
 declare function createTFLiteModule(): Promise<TFLite>;
 declare function createTFLiteSIMDModule(): Promise<TFLite>;
@@ -24,8 +24,16 @@ function useTFLite(segmentationConfig: SegmentationConfig) {
   const [selectedTFLite, setSelectedTFLite] = useState<TFLite>();
   const [isSIMDSupported, setSIMDSupported] = useState(false);
 
+  const isLoadingModelRef = useRef(false);
+
   useEffect(() => {
+    const tfliteId = `tflite`;
+    if (document.getElementById(tfliteId) !== null) {
+      return;
+    }
+
     const scriptElement = document.createElement('script');
+    scriptElement.id = tfliteId;
     scriptElement.setAttribute('src', `${window.location.origin}/tflite/tflite.js`);
     scriptElement.onload = async () => {
       const _tflite = await createTFLiteModule();
@@ -35,7 +43,13 @@ function useTFLite(segmentationConfig: SegmentationConfig) {
   }, []);
 
   useEffect(() => {
+    const tfliteSimdId = `tflite-simd`;
+    if (document.getElementById(tfliteSimdId) !== null) {
+      return;
+    }
+
     const scriptElement = document.createElement('script');
+    scriptElement.id = tfliteSimdId;
     scriptElement.setAttribute('src', `${window.location.origin}/tflite/tflite-simd.js`);
     scriptElement.onload = async () => {
       try {
@@ -67,7 +81,13 @@ function useTFLite(segmentationConfig: SegmentationConfig) {
         throw new Error(`TFLite backend unavailable: ${segmentationConfig.backend}`);
       }
 
-      const modelFileName = getTFLiteModelFileName(segmentationConfig.model, segmentationConfig.inputResolution);
+      if (isLoadingModelRef.current) {
+        return;
+      }
+
+      isLoadingModelRef.current = true;
+
+      const modelFileName = 'segm_lite_v681';
       console.log('Loading tflite model:', modelFileName);
 
       const tflitePath = `${window.location.origin}/models/${modelFileName}.tflite`;

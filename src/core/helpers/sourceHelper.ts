@@ -1,10 +1,10 @@
 export type SourceConfig = {
-  type: 'video' | 'camera';
+  type: 'video' | 'camera' | 'camera-off';
   url?: string;
 };
 
 export type SourcePlayback = {
-  htmlElement: HTMLImageElement | HTMLVideoElement;
+  htmlElement: HTMLVideoElement;
   width: number;
   height: number;
 };

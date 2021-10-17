@@ -19,5 +19,3 @@ else if (typeof define === 'function' && define['amd'])
   define([], function() { return createTFLiteSIMDModule; });
 else if (typeof exports === 'object')
   exports["createTFLiteSIMDModule"] = createTFLiteSIMDModule;
-
-console.log("tflite-simd loaded!!!!")

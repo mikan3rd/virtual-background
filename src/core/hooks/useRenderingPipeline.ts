@@ -105,6 +105,7 @@ export function useRenderingPipeline(props: Props) {
     //   eventCount = 0;
     // }
 
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     render();
     console.log('Animation started:', sourceVideoElement, backgroundConfig, segmentationBackend);
 

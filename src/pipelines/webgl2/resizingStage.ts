@@ -56,6 +56,7 @@ export function buildResizingStage(
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
     // Downloads pixels asynchronously from GPU while rendering the current frame
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     readPixelsAsync(gl, 0, 0, outputWidth, outputHeight, gl.RGBA, gl.UNSIGNED_BYTE, outputPixels);
 
     for (let i = 0; i < outputPixelCount; i++) {

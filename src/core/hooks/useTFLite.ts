@@ -115,6 +115,7 @@ function useTFLite(segmentationBackend: SegmentationBackend) {
       setSelectedTFLite(newSelectedTFLite);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadTFLiteModel();
   }, [tflite, tfliteSIMD, isSIMDSupported, segmentationBackend]);
 

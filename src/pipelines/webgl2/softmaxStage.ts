@@ -31,6 +31,7 @@ export function buildSoftmaxStage(
   `;
 
   // TFLite memory will be accessed as float32
+  // eslint-disable-next-line no-underscore-dangle
   const tfliteOutputMemoryOffset = tflite._getOutputMemoryOffset() / 4;
 
   const [segmentationWidth, segmentationHeight] = inputResolution;

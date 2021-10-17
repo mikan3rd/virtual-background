@@ -1,13 +1,12 @@
-import { SegmentationBackend, inputResolution } from '../../core/helpers/segmentationHelper';
 import { TFLite } from '../../core/hooks/useTFLite';
 import { compileShader, createPiplelineStageProgram, createTexture, glsl } from '../helpers/webglHelper';
+import { inputResolution } from '../../core/helpers/segmentationHelper';
 
 export function buildLoadSegmentationStage(
   gl: WebGL2RenderingContext,
   vertexShader: WebGLShader,
   positionBuffer: WebGLBuffer,
   texCoordBuffer: WebGLBuffer,
-  segmentationBackend: SegmentationBackend,
   tflite: TFLite,
   outputTexture: WebGLTexture,
 ) {
@@ -28,6 +27,7 @@ export function buildLoadSegmentationStage(
   `;
 
   // TFLite memory will be accessed as float32
+  // eslint-disable-next-line no-underscore-dangle
   const tfliteOutputMemoryOffset = tflite._getOutputMemoryOffset() / 4;
 
   const [segmentationWidth, segmentationHeight] = inputResolution;

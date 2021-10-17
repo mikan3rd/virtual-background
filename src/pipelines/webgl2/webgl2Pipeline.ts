@@ -127,6 +127,7 @@ export function buildWebGL2Pipeline(
 
     addFrameEvent?.();
 
+    // eslint-disable-next-line no-underscore-dangle
     tflite._runInference();
 
     addFrameEvent?.();

@@ -170,7 +170,6 @@ module.exports = {
     'react/require-default-props': ['off'],
 
     // TODO
-    'no-underscore-dangle': ['off'],
     'react/jsx-no-bind': ['off'], // OK
   }
 };

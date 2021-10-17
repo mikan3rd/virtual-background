@@ -31,6 +31,7 @@ export function buildResizingStage(
   `;
 
   // TFLite memory will be accessed as float32
+  // eslint-disable-next-line no-underscore-dangle
   const tfliteInputMemoryOffset = tflite._getInputMemoryOffset() / 4;
 
   const [outputWidth, outputHeight] = inputResolution;

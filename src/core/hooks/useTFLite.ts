@@ -36,6 +36,7 @@ function useTFLite(segmentationBackend: SegmentationBackend) {
     scriptElement.id = tfliteId;
     scriptElement.setAttribute('src', `${window.location.origin}/tflite/tflite.js`);
     scriptElement.onload = async () => {
+      // eslint-disable-next-line no-underscore-dangle
       const _tflite = await createTFLiteModule();
       setTFLite(_tflite);
     };
@@ -96,8 +97,10 @@ function useTFLite(segmentationBackend: SegmentationBackend) {
       const model = await modelResponse.arrayBuffer();
       // console.log('Model buffer size:', model.byteLength);
 
+      // eslint-disable-next-line no-underscore-dangle
       const modelBufferOffset = newSelectedTFLite._getModelBufferMemoryOffset();
       newSelectedTFLite.HEAPU8.set(new Uint8Array(model), modelBufferOffset);
+      // eslint-disable-next-line no-underscore-dangle
       newSelectedTFLite._loadModel(model.byteLength);
 
       setSelectedTFLite(newSelectedTFLite);

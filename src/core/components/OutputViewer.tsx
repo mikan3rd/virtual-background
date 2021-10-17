@@ -23,7 +23,6 @@ function OutputViewer(props: OutputViewerProps) {
   const classes = useStyles();
   const {
     pipeline,
-    backgroundImageRef,
     // fps,
     // durations: [resizingDuration, inferenceDuration, postProcessingDuration],
     canvasMediaStreamState,
@@ -50,10 +49,6 @@ function OutputViewer(props: OutputViewerProps) {
 
   return (
     <div className={classes.root}>
-      {/* TODO: 背景画像をcanvasで合成する */}
-      {backgroundConfig.type === 'image' && (
-        <img ref={backgroundImageRef} className={classes.render} src={backgroundConfig.url} alt="" />
-      )}
       <video className={classes.render} ref={videoRef} autoPlay playsInline controls={false} muted loop />
       {/* <Typography className={classes.stats} variant="caption">
         {stats}

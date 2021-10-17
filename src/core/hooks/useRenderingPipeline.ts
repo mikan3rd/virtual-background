@@ -23,7 +23,7 @@ export function useRenderingPipeline(props: Props) {
   const { sourceVideoElement, backgroundConfig, segmentationBackend, tflite } = props;
 
   const [pipeline, setPipeline] = useState<RenderingPipeline | null>(null);
-  const backgroundImageRef = useRef<HTMLImageElement>(null);
+  const backgroundImageRef = useRef<HTMLImageElement>(document.createElement('img'));
   const canvasRef = useRef<HTMLCanvasElement>(document.createElement('canvas'));
   // const [fps, setFps] = useState(0);
   // const [durations, setDurations] = useState<number[]>([]);
@@ -57,6 +57,8 @@ export function useRenderingPipeline(props: Props) {
 
     canvasRef.current.width = sourceVideoElement.videoWidth;
     canvasRef.current.height = sourceVideoElement.videoHeight;
+
+    backgroundImageRef.current.src = backgroundConfig.url ?? '';
 
     const newPipeline = buildWebGL2Pipeline(
       sourceVideoElement,
@@ -125,7 +127,6 @@ export function useRenderingPipeline(props: Props) {
 
   return {
     pipeline,
-    backgroundImageRef,
     // fps,
     // durations,
     canvasMediaStreamState,

@@ -33,6 +33,7 @@ function App() {
     lightWrapping: 0.3,
     blendMode: 'screen',
   });
+
   const { tflite, isSIMDSupported } = useTFLite(segmentationConfig);
 
   useEffect(() => {

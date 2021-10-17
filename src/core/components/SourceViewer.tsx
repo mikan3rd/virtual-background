@@ -10,6 +10,7 @@ function SourceViewer(props: SourceViewerProps) {
   const { sourceConfig, onLoad } = props;
 
   const videoRef = useRef<HTMLVideoElement>(document.createElement('video'));
+  const streamRef = useRef<MediaStream | null>(null);
 
   useEffect(() => {
     function playVideo() {
@@ -31,6 +32,7 @@ function SourceViewer(props: SourceViewerProps) {
       try {
         const constraint = { video: true };
         const stream = await navigator.mediaDevices.getUserMedia(constraint);
+        streamRef.current = stream;
         videoRef.current.srcObject = stream;
         playVideo();
         return;
@@ -39,7 +41,14 @@ function SourceViewer(props: SourceViewerProps) {
       }
     }
 
-    if (sourceConfig.type === 'camera') {
+    streamRef.current?.getTracks().forEach(track => {
+      track.stop();
+    });
+
+    if (sourceConfig.type === 'camera-off') {
+      videoRef.current.srcObject = null;
+      videoRef.current.src = '';
+    } else if (sourceConfig.type === 'camera') {
       getCameraStream();
     } else if (sourceConfig.url !== undefined) {
       videoRef.current.srcObject = null;

@@ -28,7 +28,9 @@ function useTFLite(segmentationConfig: SegmentationConfig) {
 
   useEffect(() => {
     const tfliteId = `tflite`;
-    document.getElementById(tfliteId)?.remove();
+    if (document.getElementById(tfliteId) !== null) {
+      return;
+    }
 
     const scriptElement = document.createElement('script');
     scriptElement.id = tfliteId;
@@ -42,7 +44,9 @@ function useTFLite(segmentationConfig: SegmentationConfig) {
 
   useEffect(() => {
     const tfliteSimdId = `tflite-simd`;
-    document.getElementById(tfliteSimdId)?.remove();
+    if (document.getElementById(tfliteSimdId) !== null) {
+      return;
+    }
 
     const scriptElement = document.createElement('script');
     scriptElement.id = tfliteSimdId;

@@ -7,6 +7,7 @@ import SelectionIconButton from '../../shared/components/SelectionIconButton';
 import Typography from '@material-ui/core/Typography';
 import VideoButton from '../../shared/components/VideoButton';
 import VideocamIcon from '@material-ui/icons/Videocam';
+import VideocamOffIcon from '@material-ui/icons/VideocamOff';
 
 type SourceConfigCardProps = {
   config: SourceConfig;
@@ -24,6 +25,9 @@ function SourceConfigCard(props: SourceConfigCardProps) {
         <Typography gutterBottom variant="h6" component="h2">
           Source
         </Typography>
+        <SelectionIconButton active={config.type === 'camera-off'} onClick={() => onChange({ type: 'camera-off' })}>
+          <VideocamOffIcon />
+        </SelectionIconButton>
         <SelectionIconButton active={config.type === 'camera'} onClick={() => onChange({ type: 'camera' })}>
           <VideocamIcon />
         </SelectionIconButton>

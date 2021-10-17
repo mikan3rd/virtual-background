@@ -51,6 +51,7 @@ function OutputViewer(props: OutputViewerProps) {
 
   return (
     <div className={classes.root}>
+      {/* TODO: 背景画像をcanvasで合成する */}
       {backgroundConfig.type === 'image' && (
         <img ref={backgroundImageRef} className={classes.render} src={backgroundConfig.url} alt="" />
       )}

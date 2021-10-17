@@ -30,15 +30,13 @@ function ViewerCard(props: ViewerCardProps) {
   return (
     <Paper className={classes.root}>
       <SourceViewer sourceConfig={sourceConfig} onLoad={setSourcePlayback} />
-      {sourcePlayback !== undefined && tflite !== undefined && (
-        <OutputViewer
-          sourcePlayback={sourcePlayback}
-          backgroundConfig={backgroundConfig}
-          segmentationConfig={segmentationConfig}
-          postProcessingConfig={postProcessingConfig}
-          tflite={tflite}
-        />
-      )}
+      <OutputViewer
+        sourcePlayback={sourcePlayback}
+        backgroundConfig={backgroundConfig}
+        segmentationConfig={segmentationConfig}
+        postProcessingConfig={postProcessingConfig}
+        tflite={tflite}
+      />
     </Paper>
   );
 }

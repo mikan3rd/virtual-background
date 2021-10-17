@@ -11,15 +11,13 @@ type SelectionButtonProps = {
 };
 
 function SelectionButton(props: SelectionButtonProps) {
+  const { active, disabled, children, onClick } = props;
+
   const classes = useStyles();
 
   return (
-    <Button
-      className={clsx(classes.root, props.active && classes.active)}
-      disabled={props.disabled}
-      onClick={props.onClick}
-    >
-      {props.children}
+    <Button className={clsx(classes.root, active && classes.active)} disabled={disabled} onClick={onClick}>
+      {children}
     </Button>
   );
 }

@@ -9,16 +9,11 @@ type ImageButtonProps = {
 };
 
 function ImageButton(props: ImageButtonProps) {
-  const [thumbnailUrl, revokeThumbnailUrl] = useImageThumbnail(props.imageUrl);
+  const { imageUrl, active, onClick } = props;
 
-  return (
-    <ThumbnailButton
-      thumbnailUrl={thumbnailUrl}
-      active={props.active}
-      onClick={props.onClick}
-      onLoad={revokeThumbnailUrl}
-    />
-  );
+  const [thumbnailUrl, revokeThumbnailUrl] = useImageThumbnail(imageUrl);
+
+  return <ThumbnailButton thumbnailUrl={thumbnailUrl} active={active} onClick={onClick} onLoad={revokeThumbnailUrl} />;
 }
 
 export default ImageButton;

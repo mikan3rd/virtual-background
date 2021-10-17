@@ -170,7 +170,6 @@ module.exports = {
     'react/require-default-props': ['off'],
 
     // TODO
-    'react/destructuring-assignment': ['off'],
     '@typescript-eslint/no-explicit-any': ['off'],
     'no-underscore-dangle': ['off'],
     'no-param-reassign': ['off'],

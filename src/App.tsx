@@ -49,6 +49,7 @@ function App() {
         postProcessingConfig={postProcessingConfig}
         tflite={tflite}
       />
+      <PostProcessingConfigCard config={postProcessingConfig} onChange={setPostProcessingConfig} />
       <SourceConfigCard config={sourceConfig} onChange={setSourceConfig} />
       <BackgroundConfigCard config={backgroundConfig} onChange={setBackgroundConfig} />
       <SegmentationConfigCard
@@ -56,7 +57,6 @@ function App() {
         isSIMDSupported={isSIMDSupported}
         onChange={setSegmentationBackend}
       />
-      <PostProcessingConfigCard config={postProcessingConfig} onChange={setPostProcessingConfig} />
     </div>
   );
 }

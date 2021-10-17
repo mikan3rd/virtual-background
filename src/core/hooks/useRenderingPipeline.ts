@@ -25,8 +25,8 @@ export function useRenderingPipeline(props: Props) {
   const [pipeline, setPipeline] = useState<RenderingPipeline | null>(null);
   const backgroundImageRef = useRef<HTMLImageElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(document.createElement('canvas'));
-  const [fps, setFps] = useState(0);
-  const [durations, setDurations] = useState<number[]>([]);
+  // const [fps, setFps] = useState(0);
+  // const [durations, setDurations] = useState<number[]>([]);
 
   const [canvasMediaStreamState, setCanvasMediaStreamState] = useState<MediaStream | null>(null);
   const canvasMediaStreamRef = useRef(canvasMediaStreamState);
@@ -47,11 +47,11 @@ export function useRenderingPipeline(props: Props) {
     // the rendering loop when the framerate is low
     let shouldRender = true;
 
-    let previousTime = 0;
-    let beginTime = 0;
-    let eventCount = 0;
-    let frameCount = 0;
-    const frameDurations: number[] = [];
+    // let previousTime = 0;
+    // let beginTime = 0;
+    // let eventCount = 0;
+    // let frameCount = 0;
+    // const frameDurations: number[] = [];
 
     let renderRequestId: number;
 
@@ -65,43 +65,43 @@ export function useRenderingPipeline(props: Props) {
       segmentationBackend,
       canvasRef.current,
       tflite,
-      addFrameEvent,
+      // addFrameEvent,
     );
 
     async function render() {
       if (!shouldRender) {
         return;
       }
-      beginFrame();
+      // beginFrame();
       await newPipeline.render();
-      endFrame();
+      // endFrame();
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       renderRequestId = requestAnimationFrame(render);
     }
 
-    function beginFrame() {
-      beginTime = Date.now();
-    }
+    // function beginFrame() {
+    //   beginTime = Date.now();
+    // }
 
-    function addFrameEvent() {
-      const time = Date.now();
-      frameDurations[eventCount] = time - beginTime;
-      beginTime = time;
-      eventCount++;
-    }
+    // function addFrameEvent() {
+    //   const time = Date.now();
+    //   frameDurations[eventCount] = time - beginTime;
+    //   beginTime = time;
+    //   eventCount++;
+    // }
 
-    function endFrame() {
-      const time = Date.now();
-      frameDurations[eventCount] = time - beginTime;
-      frameCount++;
-      if (time >= previousTime + 1000) {
-        setFps((frameCount * 1000) / (time - previousTime));
-        setDurations(frameDurations);
-        previousTime = time;
-        frameCount = 0;
-      }
-      eventCount = 0;
-    }
+    // function endFrame() {
+    //   const time = Date.now();
+    //   frameDurations[eventCount] = time - beginTime;
+    //   frameCount++;
+    //   if (time >= previousTime + 1000) {
+    //     setFps((frameCount * 1000) / (time - previousTime));
+    //     setDurations(frameDurations);
+    //     previousTime = time;
+    //     frameCount = 0;
+    //   }
+    //   eventCount = 0;
+    // }
 
     render();
     console.log('Animation started:', sourceVideoElement, backgroundConfig, segmentationBackend);
@@ -126,8 +126,8 @@ export function useRenderingPipeline(props: Props) {
   return {
     pipeline,
     backgroundImageRef,
-    fps,
-    durations,
+    // fps,
+    // durations,
     canvasMediaStreamState,
   };
 }

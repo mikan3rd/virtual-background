@@ -16,7 +16,7 @@ export function buildWebGL2Pipeline(
   segmentationBackend: SegmentationBackend,
   canvas: HTMLCanvasElement,
   tflite: TFLite,
-  addFrameEvent: () => void,
+  addFrameEvent?: () => void,
 ) {
   const vertexShaderSource = glsl`#version 300 es
 
@@ -133,11 +133,11 @@ export function buildWebGL2Pipeline(
 
     resizingStage.render();
 
-    addFrameEvent();
+    addFrameEvent?.();
 
     tflite._runInference();
 
-    addFrameEvent();
+    addFrameEvent?.();
 
     loadSegmentationStage.render();
     jointBilateralFilterStage.render();

@@ -5,7 +5,7 @@ import { TFLite } from '../hooks/useTFLite';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { useRenderingPipeline } from '../hooks/useRenderingPipeline';
 import React, { useEffect, useRef } from 'react';
-import Typography from '@material-ui/core/Typography';
+// import Typography from '@material-ui/core/Typography';
 
 type OutputViewerProps = {
   sourceVideoElement?: HTMLVideoElement;
@@ -24,8 +24,8 @@ function OutputViewer(props: OutputViewerProps) {
   const {
     pipeline,
     backgroundImageRef,
-    fps,
-    durations: [resizingDuration, inferenceDuration, postProcessingDuration],
+    // fps,
+    // durations: [resizingDuration, inferenceDuration, postProcessingDuration],
     canvasMediaStreamState,
   } = useRenderingPipeline({ sourceVideoElement, backgroundConfig, segmentationBackend, tflite });
 
@@ -41,12 +41,12 @@ function OutputViewer(props: OutputViewerProps) {
     }
   }, [pipeline, postProcessingConfig]);
 
-  const statDetails = [
-    `resizing ${resizingDuration}ms`,
-    `inference ${inferenceDuration}ms`,
-    `post-processing ${postProcessingDuration}ms`,
-  ];
-  const stats = `${Math.round(fps)} fps (${statDetails.join(', ')})`;
+  // const statDetails = [
+  //   `resizing ${resizingDuration}ms`,
+  //   `inference ${inferenceDuration}ms`,
+  //   `post-processing ${postProcessingDuration}ms`,
+  // ];
+  // const stats = `${Math.round(fps)} fps (${statDetails.join(', ')})`;
 
   return (
     <div className={classes.root}>
@@ -55,9 +55,9 @@ function OutputViewer(props: OutputViewerProps) {
         <img ref={backgroundImageRef} className={classes.render} src={backgroundConfig.url} alt="" />
       )}
       <video className={classes.render} ref={videoRef} autoPlay playsInline controls={false} muted loop />
-      <Typography className={classes.stats} variant="caption">
+      {/* <Typography className={classes.stats} variant="caption">
         {stats}
-      </Typography>
+      </Typography> */}
     </div>
   );
 }

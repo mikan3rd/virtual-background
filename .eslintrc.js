@@ -170,7 +170,6 @@ module.exports = {
     'react/require-default-props': ['off'],
 
     // TODO
-    '@typescript-eslint/no-explicit-any': ['off'],
     'no-underscore-dangle': ['off'],
     '@typescript-eslint/no-floating-promises': ['off'],
     'no-console': ['off'],

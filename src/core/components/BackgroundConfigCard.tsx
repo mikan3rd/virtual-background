@@ -4,6 +4,7 @@ import BlockIcon from '@material-ui/icons/Block';
 import BlurOnIcon from '@material-ui/icons/BlurOn';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import ColorLensIcon from '@material-ui/icons/ColorLens';
 import ImageButton from '../../shared/components/ImageButton';
 import React from 'react';
 import SelectionIconButton from '../../shared/components/SelectionIconButton';
@@ -30,6 +31,9 @@ function BackgroundConfigCard(props: BackgroundConfigCardProps) {
         </SelectionIconButton>
         <SelectionIconButton active={config.type === 'blur'} onClick={() => onChange({ type: 'blur' })}>
           <BlurOnIcon />
+        </SelectionIconButton>
+        <SelectionIconButton active={config.type === 'color'} onClick={() => onChange({ type: 'color' })}>
+          <ColorLensIcon />
         </SelectionIconButton>
         {backgroundImageUrls.map(imageUrl => (
           <ImageButton

@@ -1,4 +1,5 @@
 import { BackgroundBlurStage, buildBackgroundBlurStage } from './backgroundBlurStage';
+import { BackgroundColorStage, buildBackgroundColorStage } from './backgroundColorStage';
 import { BackgroundConfig } from '../../core/helpers/backgroundHelper';
 import { BackgroundImageStage, buildBackgroundImageStage } from './backgroundImageStage';
 import { PostProcessingConfig } from '../../core/helpers/postProcessingHelper';
@@ -104,7 +105,9 @@ export function buildWebGL2Pipeline(
   const backgroundStage =
     backgroundConfig.type === 'blur'
       ? buildBackgroundBlurStage(gl, vertexShader, positionBuffer, texCoordBuffer, personMaskTexture, canvas)
-      : buildBackgroundImageStage(gl, positionBuffer, texCoordBuffer, personMaskTexture, backgroundImage, canvas);
+      : backgroundConfig.type === 'image'
+      ? buildBackgroundImageStage(gl, positionBuffer, texCoordBuffer, personMaskTexture, backgroundImage, canvas)
+      : buildBackgroundColorStage(gl, positionBuffer, texCoordBuffer, personMaskTexture, canvas);
 
   async function render() {
     if (gl === null) {
@@ -146,6 +149,11 @@ export function buildWebGL2Pipeline(
       backgroundImageStage.updateCoverage(postProcessingConfig.coverage);
       backgroundImageStage.updateLightWrapping(postProcessingConfig.lightWrapping);
       backgroundImageStage.updateBlendMode(postProcessingConfig.blendMode);
+    } else if (backgroundConfig.type === 'color') {
+      const backgroundColorStage = backgroundStage as BackgroundColorStage;
+      backgroundColorStage.updateCoverage(postProcessingConfig.coverage);
+      backgroundColorStage.updateLightWrapping(postProcessingConfig.lightWrapping);
+      backgroundColorStage.updateBlendMode(postProcessingConfig.blendMode);
     } else if (backgroundConfig.type === 'blur') {
       const backgroundBlurStage = backgroundStage as BackgroundBlurStage;
       backgroundBlurStage.updateCoverage(postProcessingConfig.coverage);

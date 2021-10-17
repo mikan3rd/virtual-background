@@ -1,89 +1,64 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
-import { useEffect, useState } from 'react'
-import BackgroundConfigCard from './core/components/BackgroundConfigCard'
-import PostProcessingConfigCard from './core/components/PostProcessingConfigCard'
-import SegmentationConfigCard from './core/components/SegmentationConfigCard'
-import SourceConfigCard from './core/components/SourceConfigCard'
-import ViewerCard from './core/components/ViewerCard'
-import {
-  BackgroundConfig,
-  backgroundImageUrls,
-} from './core/helpers/backgroundHelper'
-import { PostProcessingConfig } from './core/helpers/postProcessingHelper'
-import { SegmentationConfig } from './core/helpers/segmentationHelper'
-import { SourceConfig, sourceImageUrls } from './core/helpers/sourceHelper'
-import useBodyPix from './core/hooks/useBodyPix'
-import useTFLite from './core/hooks/useTFLite'
+import { BackgroundConfig } from './core/helpers/backgroundHelper';
+import { PostProcessingConfig } from './core/helpers/postProcessingHelper';
+import { SegmentationBackend } from './core/helpers/segmentationHelper';
+import { SourceConfig, sourceVideoUrls } from './core/helpers/sourceHelper';
+import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+import BackgroundConfigCard from './core/components/BackgroundConfigCard';
+import PostProcessingConfigCard from './core/components/PostProcessingConfigCard';
+import React, { useEffect, useState } from 'react';
+import SegmentationConfigCard from './core/components/SegmentationConfigCard';
+import SourceConfigCard from './core/components/SourceConfigCard';
+import ViewerCard from './core/components/ViewerCard';
+import useTFLite from './core/hooks/useTFLite';
 
 function App() {
-  const classes = useStyles()
+  const classes = useStyles();
   const [sourceConfig, setSourceConfig] = useState<SourceConfig>({
-    type: 'image',
-    url: sourceImageUrls[0],
-  })
+    type: 'video',
+    url: sourceVideoUrls[1],
+  });
   const [backgroundConfig, setBackgroundConfig] = useState<BackgroundConfig>({
-    type: 'image',
-    url: backgroundImageUrls[0],
-  })
-  const [
-    segmentationConfig,
-    setSegmentationConfig,
-  ] = useState<SegmentationConfig>({
-    model: 'meet',
-    backend: 'wasm',
-    inputResolution: '160x96',
-    pipeline: 'webgl2',
-  })
-  const [
-    postProcessingConfig,
-    setPostProcessingConfig,
-  ] = useState<PostProcessingConfig>({
+    type: 'blur',
+  });
+  const [segmentationBackend, setSegmentationBackend] = useState<SegmentationBackend>('wasm');
+  const [postProcessingConfig, setPostProcessingConfig] = useState<PostProcessingConfig>({
     smoothSegmentationMask: true,
     jointBilateralFilter: { sigmaSpace: 1, sigmaColor: 0.1 },
     coverage: [0.5, 0.75],
     lightWrapping: 0.3,
     blendMode: 'screen',
-  })
-  const bodyPix = useBodyPix()
-  const { tflite, isSIMDSupported } = useTFLite(segmentationConfig)
+  });
+
+  const { tflite, isSIMDSupported } = useTFLite(segmentationBackend);
 
   useEffect(() => {
-    setSegmentationConfig((previousSegmentationConfig) => {
-      if (previousSegmentationConfig.backend === 'wasm' && isSIMDSupported) {
-        return { ...previousSegmentationConfig, backend: 'wasmSimd' }
-      } else {
-        return previousSegmentationConfig
+    setSegmentationBackend(previousSegmentationConfig => {
+      if (previousSegmentationConfig === 'wasm' && isSIMDSupported) {
+        return 'wasmSimd';
       }
-    })
-  }, [isSIMDSupported])
+      return previousSegmentationConfig;
+    });
+  }, [isSIMDSupported]);
 
   return (
     <div className={classes.root}>
       <ViewerCard
         sourceConfig={sourceConfig}
         backgroundConfig={backgroundConfig}
-        segmentationConfig={segmentationConfig}
+        segmentationBackend={segmentationBackend}
         postProcessingConfig={postProcessingConfig}
-        bodyPix={bodyPix}
         tflite={tflite}
       />
+      <PostProcessingConfigCard config={postProcessingConfig} onChange={setPostProcessingConfig} />
       <SourceConfigCard config={sourceConfig} onChange={setSourceConfig} />
-      <BackgroundConfigCard
-        config={backgroundConfig}
-        onChange={setBackgroundConfig}
-      />
+      <BackgroundConfigCard config={backgroundConfig} onChange={setBackgroundConfig} />
       <SegmentationConfigCard
-        config={segmentationConfig}
+        backend={segmentationBackend}
         isSIMDSupported={isSIMDSupported}
-        onChange={setSegmentationConfig}
-      />
-      <PostProcessingConfigCard
-        config={postProcessingConfig}
-        pipeline={segmentationConfig.pipeline}
-        onChange={setPostProcessingConfig}
+        onChange={setSegmentationBackend}
       />
     </div>
-  )
+  );
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -111,7 +86,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
     },
-  })
-)
+  }),
+);
 
-export default App
+export default App;

@@ -1,23 +1,24 @@
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
-import BlockIcon from '@material-ui/icons/Block'
-import BlurOnIcon from '@material-ui/icons/BlurOn'
-import ImageButton from '../../shared/components/ImageButton'
-import SelectionIconButton from '../../shared/components/SelectionIconButton'
-import {
-  BackgroundConfig,
-  backgroundImageUrls,
-} from '../helpers/backgroundHelper'
+import { BackgroundConfig, backgroundImageUrls } from '../helpers/backgroundHelper';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
+import BlockIcon from '@material-ui/icons/Block';
+import BlurOnIcon from '@material-ui/icons/BlurOn';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import ColorLensIcon from '@material-ui/icons/ColorLens';
+import ImageButton from '../../shared/components/ImageButton';
+import React from 'react';
+import SelectionIconButton from '../../shared/components/SelectionIconButton';
+import Typography from '@material-ui/core/Typography';
 
 type BackgroundConfigCardProps = {
-  config: BackgroundConfig
-  onChange: (config: BackgroundConfig) => void
-}
+  config: BackgroundConfig;
+  onChange: (config: BackgroundConfig) => void;
+};
 
 function BackgroundConfigCard(props: BackgroundConfigCardProps) {
-  const classes = useStyles()
+  const { config, onChange } = props;
+
+  const classes = useStyles();
 
   return (
     <Card className={classes.root}>
@@ -25,37 +26,34 @@ function BackgroundConfigCard(props: BackgroundConfigCardProps) {
         <Typography gutterBottom variant="h6" component="h2">
           Background
         </Typography>
-        <SelectionIconButton
-          active={props.config.type === 'none'}
-          onClick={() => props.onChange({ type: 'none' })}
-        >
+        <SelectionIconButton active={config.type === 'none'} onClick={() => onChange({ type: 'none' })}>
           <BlockIcon />
         </SelectionIconButton>
-        <SelectionIconButton
-          active={props.config.type === 'blur'}
-          onClick={() => props.onChange({ type: 'blur' })}
-        >
+        <SelectionIconButton active={config.type === 'blur'} onClick={() => onChange({ type: 'blur' })}>
           <BlurOnIcon />
         </SelectionIconButton>
-        {backgroundImageUrls.map((imageUrl) => (
+        <SelectionIconButton active={config.type === 'color'} onClick={() => onChange({ type: 'color' })}>
+          <ColorLensIcon />
+        </SelectionIconButton>
+        {backgroundImageUrls.map(imageUrl => (
           <ImageButton
             key={imageUrl}
             imageUrl={imageUrl}
-            active={imageUrl === props.config.url}
-            onClick={() => props.onChange({ type: 'image', url: imageUrl })}
+            active={imageUrl === config.url}
+            onClick={() => onChange({ type: 'image', url: imageUrl })}
           />
         ))}
       </CardContent>
     </Card>
-  )
+  );
 }
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     root: {
       flex: 1,
     },
-  })
-)
+  }),
+);
 
-export default BackgroundConfigCard
+export default BackgroundConfigCard;

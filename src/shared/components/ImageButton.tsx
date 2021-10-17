@@ -1,23 +1,19 @@
-import useImageThumbnail from '../hooks/useImageThumbnail'
-import ThumbnailButton from './TumbnailButton'
+import React from 'react';
+import ThumbnailButton from './TumbnailButton';
+import useImageThumbnail from '../hooks/useImageThumbnail';
 
 type ImageButtonProps = {
-  imageUrl: string
-  active: boolean
-  onClick: () => void
-}
+  imageUrl: string;
+  active: boolean;
+  onClick: () => void;
+};
 
 function ImageButton(props: ImageButtonProps) {
-  const [thumbnailUrl, revokeThumbnailUrl] = useImageThumbnail(props.imageUrl)
+  const { imageUrl, active, onClick } = props;
 
-  return (
-    <ThumbnailButton
-      thumbnailUrl={thumbnailUrl}
-      active={props.active}
-      onClick={props.onClick}
-      onLoad={revokeThumbnailUrl}
-    />
-  )
+  const [thumbnailUrl, revokeThumbnailUrl] = useImageThumbnail(imageUrl);
+
+  return <ThumbnailButton thumbnailUrl={thumbnailUrl} active={active} onClick={onClick} onLoad={revokeThumbnailUrl} />;
 }
 
-export default ImageButton
+export default ImageButton;

@@ -1,59 +1,48 @@
-import Avatar from '@material-ui/core/Avatar'
-import Paper from '@material-ui/core/Paper'
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
-import { BodyPix } from '@tensorflow-models/body-pix'
-import { useEffect, useState } from 'react'
-import { BackgroundConfig } from '../helpers/backgroundHelper'
-import { PostProcessingConfig } from '../helpers/postProcessingHelper'
-import { SegmentationConfig } from '../helpers/segmentationHelper'
-import { SourceConfig, SourcePlayback } from '../helpers/sourceHelper'
-import { TFLite } from '../hooks/useTFLite'
-import OutputViewer from './OutputViewer'
-import SourceViewer from './SourceViewer'
+import { BackgroundConfig } from '../helpers/backgroundHelper';
+import { PostProcessingConfig } from '../helpers/postProcessingHelper';
+import { SegmentationBackend } from '../helpers/segmentationHelper';
+import { SourceConfig } from '../helpers/sourceHelper';
+import { TFLite } from '../hooks/useTFLite';
+import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+import OutputViewer from './OutputViewer';
+import Paper from '@material-ui/core/Paper';
+import React, { useEffect, useState } from 'react';
+import SourceViewer from './SourceViewer';
 
 type ViewerCardProps = {
-  sourceConfig: SourceConfig
-  backgroundConfig: BackgroundConfig
-  segmentationConfig: SegmentationConfig
-  postProcessingConfig: PostProcessingConfig
-  bodyPix?: BodyPix
-  tflite?: TFLite
-}
+  sourceConfig: SourceConfig;
+  backgroundConfig: BackgroundConfig;
+  segmentationBackend: SegmentationBackend;
+  postProcessingConfig: PostProcessingConfig;
+  tflite?: TFLite;
+};
 
 function ViewerCard(props: ViewerCardProps) {
-  const classes = useStyles()
-  const [sourcePlayback, setSourcePlayback] = useState<SourcePlayback>()
+  const { sourceConfig, backgroundConfig, segmentationBackend, postProcessingConfig, tflite } = props;
+
+  const classes = useStyles();
+  const [sourceVideoElement, setSourcePlayback] = useState<HTMLVideoElement>();
 
   useEffect(() => {
-    setSourcePlayback(undefined)
-  }, [props.sourceConfig])
+    setSourcePlayback(undefined);
+  }, [sourceConfig]);
 
   return (
     <Paper className={classes.root}>
-      <SourceViewer
-        sourceConfig={props.sourceConfig}
-        onLoad={setSourcePlayback}
+      <SourceViewer sourceConfig={sourceConfig} onLoad={setSourcePlayback} />
+      <OutputViewer
+        sourceVideoElement={sourceVideoElement}
+        backgroundConfig={backgroundConfig}
+        segmentationBackend={segmentationBackend}
+        postProcessingConfig={postProcessingConfig}
+        tflite={tflite}
       />
-      {sourcePlayback && props.bodyPix && props.tflite ? (
-        <OutputViewer
-          sourcePlayback={sourcePlayback}
-          backgroundConfig={props.backgroundConfig}
-          segmentationConfig={props.segmentationConfig}
-          postProcessingConfig={props.postProcessingConfig}
-          bodyPix={props.bodyPix}
-          tflite={props.tflite}
-        />
-      ) : (
-        <div className={classes.noOutput}>
-          <Avatar className={classes.avatar} />
-        </div>
-      )}
     </Paper>
-  )
+  );
 }
 
 const useStyles = makeStyles((theme: Theme) => {
-  const minHeight = [`${theme.spacing(52)}px`, `100vh - ${theme.spacing(2)}px`]
+  const minHeight = [`${theme.spacing(52)}px`, `100vh - ${theme.spacing(2)}px`];
 
   return createStyles({
     root: {
@@ -63,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) => {
 
       [theme.breakpoints.up('md')]: {
         gridColumnStart: 1,
-        gridColumnEnd: 3,
+        gridColumnEnd: 1,
       },
 
       [theme.breakpoints.up('lg')]: {
@@ -81,7 +70,7 @@ const useStyles = makeStyles((theme: Theme) => {
       width: theme.spacing(20),
       height: theme.spacing(20),
     },
-  })
-})
+  });
+});
 
-export default ViewerCard
+export default ViewerCard;

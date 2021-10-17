@@ -1,126 +1,98 @@
-import { BodyPix } from '@tensorflow-models/body-pix'
-import { useEffect, useRef, useState } from 'react'
-import { buildCanvas2dPipeline } from '../../pipelines/canvas2d/canvas2dPipeline'
-import { buildWebGL2Pipeline } from '../../pipelines/webgl2/webgl2Pipeline'
-import { BackgroundConfig } from '../helpers/backgroundHelper'
-import { RenderingPipeline } from '../helpers/renderingPipelineHelper'
-import { SegmentationConfig } from '../helpers/segmentationHelper'
-import { SourcePlayback } from '../helpers/sourceHelper'
-import { TFLite } from './useTFLite'
+import { BackgroundConfig } from '../helpers/backgroundHelper';
+import { RenderingPipeline } from '../helpers/renderingPipelineHelper';
+import { SegmentationBackend } from '../helpers/segmentationHelper';
+import { TFLite } from './useTFLite';
+import { buildWebGL2Pipeline } from '../../pipelines/webgl2/webgl2Pipeline';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-function useRenderingPipeline(
-  sourcePlayback: SourcePlayback,
-  backgroundConfig: BackgroundConfig,
-  segmentationConfig: SegmentationConfig,
-  bodyPix: BodyPix,
-  tflite: TFLite
-) {
-  const [pipeline, setPipeline] = useState<RenderingPipeline | null>(null)
-  const backgroundImageRef = useRef<HTMLImageElement>(null)
-  const canvasRef = useRef<HTMLCanvasElement>(null!)
-  const [fps, setFps] = useState(0)
-  const [durations, setDurations] = useState<number[]>([])
-
-  useEffect(() => {
-    // The useEffect cleanup function is not enough to stop
-    // the rendering loop when the framerate is low
-    let shouldRender = true
-
-    let previousTime = 0
-    let beginTime = 0
-    let eventCount = 0
-    let frameCount = 0
-    const frameDurations: number[] = []
-
-    let renderRequestId: number
-
-    const newPipeline =
-      segmentationConfig.pipeline === 'webgl2'
-        ? buildWebGL2Pipeline(
-            sourcePlayback,
-            backgroundImageRef.current,
-            backgroundConfig,
-            segmentationConfig,
-            canvasRef.current,
-            tflite,
-            addFrameEvent
-          )
-        : buildCanvas2dPipeline(
-            sourcePlayback,
-            backgroundConfig,
-            segmentationConfig,
-            canvasRef.current,
-            bodyPix,
-            tflite,
-            addFrameEvent
-          )
-
-    async function render() {
-      if (!shouldRender) {
-        return
-      }
-      beginFrame()
-      await newPipeline.render()
-      endFrame()
-      renderRequestId = requestAnimationFrame(render)
-    }
-
-    function beginFrame() {
-      beginTime = Date.now()
-    }
-
-    function addFrameEvent() {
-      const time = Date.now()
-      frameDurations[eventCount] = time - beginTime
-      beginTime = time
-      eventCount++
-    }
-
-    function endFrame() {
-      const time = Date.now()
-      frameDurations[eventCount] = time - beginTime
-      frameCount++
-      if (time >= previousTime + 1000) {
-        setFps((frameCount * 1000) / (time - previousTime))
-        setDurations(frameDurations)
-        previousTime = time
-        frameCount = 0
-      }
-      eventCount = 0
-    }
-
-    render()
-    console.log(
-      'Animation started:',
-      sourcePlayback,
-      backgroundConfig,
-      segmentationConfig
-    )
-
-    setPipeline(newPipeline)
-
-    return () => {
-      shouldRender = false
-      cancelAnimationFrame(renderRequestId)
-      newPipeline.cleanUp()
-      console.log(
-        'Animation stopped:',
-        sourcePlayback,
-        backgroundConfig,
-        segmentationConfig
-      )
-
-      setPipeline(null)
-    }
-  }, [sourcePlayback, backgroundConfig, segmentationConfig, bodyPix, tflite])
-
-  return {
-    pipeline,
-    backgroundImageRef,
-    canvasRef,
-    fps,
-    durations,
+declare global {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+  interface HTMLCanvasElement {
+    captureStream(frameRate?: number): MediaStream;
   }
 }
 
-export default useRenderingPipeline
+type Props = {
+  sourceVideoElement?: HTMLVideoElement;
+  backgroundConfig: BackgroundConfig;
+  segmentationBackend: SegmentationBackend;
+  tflite?: TFLite;
+};
+
+export function useRenderingPipeline(props: Props) {
+  const { sourceVideoElement, backgroundConfig, segmentationBackend, tflite } = props;
+
+  const [pipeline, setPipeline] = useState<RenderingPipeline | null>(null);
+  const backgroundImageRef = useRef<HTMLImageElement>(document.createElement('img'));
+  const canvasRef = useRef<HTMLCanvasElement>(document.createElement('canvas'));
+
+  const [canvasMediaStreamState, setCanvasMediaStreamState] = useState<MediaStream | null>(null);
+  const canvasMediaStreamRef = useRef(canvasMediaStreamState);
+
+  const setCanvasMediaStream = useCallback((mediaStream: typeof canvasMediaStreamState) => {
+    canvasMediaStreamRef.current = mediaStream;
+    setCanvasMediaStreamState(mediaStream);
+  }, []);
+
+  useEffect(() => {
+    if (sourceVideoElement === undefined || tflite === undefined) {
+      return () => {
+        setPipeline(null);
+      };
+    }
+
+    // The useEffect cleanup function is not enough to stop
+    // the rendering loop when the framerate is low
+    let shouldRender = true;
+
+    let renderRequestId: number;
+
+    canvasRef.current.width = sourceVideoElement.videoWidth;
+    canvasRef.current.height = sourceVideoElement.videoHeight;
+
+    backgroundImageRef.current.src = backgroundConfig.url ?? '';
+
+    const newPipeline = buildWebGL2Pipeline(
+      sourceVideoElement,
+      backgroundImageRef.current,
+      backgroundConfig,
+      segmentationBackend,
+      canvasRef.current,
+      tflite,
+    );
+
+    async function render() {
+      if (!shouldRender) {
+        return;
+      }
+      await newPipeline.render();
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      renderRequestId = requestAnimationFrame(render);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    render();
+    // console.log('Animation started:', sourceVideoElement, backgroundConfig, segmentationBackend);
+
+    setPipeline(newPipeline);
+
+    canvasMediaStreamRef.current?.getTracks().forEach(track => {
+      track.stop();
+    });
+    setCanvasMediaStream(canvasRef.current.captureStream());
+
+    return () => {
+      shouldRender = false;
+      cancelAnimationFrame(renderRequestId);
+      newPipeline.cleanUp();
+      // console.log('Animation stopped:', sourceVideoElement, backgroundConfig, segmentationBackend);
+
+      setPipeline(null);
+    };
+  }, [sourceVideoElement, backgroundConfig, segmentationBackend, tflite, setCanvasMediaStream]);
+
+  return {
+    pipeline,
+    canvasMediaStreamState,
+  };
+}

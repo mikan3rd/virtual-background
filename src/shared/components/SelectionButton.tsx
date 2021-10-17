@@ -1,26 +1,25 @@
-import Button from '@material-ui/core/Button'
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
-import clsx from 'clsx'
+import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import React from 'react';
+import clsx from 'clsx';
 
 type SelectionButtonProps = {
-  active: boolean
-  disabled?: boolean
-  children: React.ReactNode
-  onClick: () => void
-}
+  active: boolean;
+  disabled?: boolean;
+  children: React.ReactNode;
+  onClick: () => void;
+};
 
 function SelectionButton(props: SelectionButtonProps) {
-  const classes = useStyles()
+  const { active, disabled, children, onClick } = props;
+
+  const classes = useStyles();
 
   return (
-    <Button
-      className={clsx(classes.root, props.active && classes.active)}
-      disabled={props.disabled}
-      onClick={props.onClick}
-    >
-      {props.children}
+    <Button className={clsx(classes.root, active && classes.active)} disabled={disabled} onClick={onClick}>
+      {children}
     </Button>
-  )
+  );
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -46,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) =>
       borderColor: theme.palette.primary.main,
       transform: 'scale(1.125)',
     },
-  })
-)
+  }),
+);
 
-export default SelectionButton
+export default SelectionButton;

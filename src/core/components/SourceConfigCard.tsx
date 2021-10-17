@@ -1,24 +1,23 @@
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
-import VideocamIcon from '@material-ui/icons/Videocam'
-import ImageButton from '../../shared/components/ImageButton'
-import SelectionIconButton from '../../shared/components/SelectionIconButton'
-import VideoButton from '../../shared/components/VideoButton'
-import {
-  SourceConfig,
-  sourceImageUrls,
-  sourceVideoUrls,
-} from '../helpers/sourceHelper'
+import { SourceConfig, sourceVideoUrls } from '../helpers/sourceHelper';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import React from 'react';
+import SelectionIconButton from '../../shared/components/SelectionIconButton';
+import Typography from '@material-ui/core/Typography';
+import VideoButton from '../../shared/components/VideoButton';
+import VideocamIcon from '@material-ui/icons/Videocam';
+import VideocamOffIcon from '@material-ui/icons/VideocamOff';
 
 type SourceConfigCardProps = {
-  config: SourceConfig
-  onChange: (config: SourceConfig) => void
-}
+  config: SourceConfig;
+  onChange: (config: SourceConfig) => void;
+};
 
 function SourceConfigCard(props: SourceConfigCardProps) {
-  const classes = useStyles()
+  const { config, onChange } = props;
+
+  const classes = useStyles();
 
   return (
     <Card className={classes.root}>
@@ -26,39 +25,31 @@ function SourceConfigCard(props: SourceConfigCardProps) {
         <Typography gutterBottom variant="h6" component="h2">
           Source
         </Typography>
-        <SelectionIconButton
-          active={props.config.type === 'camera'}
-          onClick={() => props.onChange({ type: 'camera' })}
-        >
+        <SelectionIconButton active={config.type === 'camera-off'} onClick={() => onChange({ type: 'camera-off' })}>
+          <VideocamOffIcon />
+        </SelectionIconButton>
+        <SelectionIconButton active={config.type === 'camera'} onClick={() => onChange({ type: 'camera' })}>
           <VideocamIcon />
         </SelectionIconButton>
-        {sourceImageUrls.map((imageUrl) => (
-          <ImageButton
-            key={imageUrl}
-            imageUrl={imageUrl}
-            active={imageUrl === props.config.url}
-            onClick={() => props.onChange({ type: 'image', url: imageUrl })}
-          />
-        ))}
-        {sourceVideoUrls.map((videoUrl) => (
+        {sourceVideoUrls.map(videoUrl => (
           <VideoButton
             key={videoUrl}
             videoUrl={videoUrl}
-            active={videoUrl === props.config.url}
-            onClick={() => props.onChange({ type: 'video', url: videoUrl })}
+            active={videoUrl === config.url}
+            onClick={() => onChange({ type: 'video', url: videoUrl })}
           />
         ))}
       </CardContent>
     </Card>
-  )
+  );
 }
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     root: {
       flex: 1,
     },
-  })
-)
+  }),
+);
 
-export default SourceConfigCard
+export default SourceConfigCard;

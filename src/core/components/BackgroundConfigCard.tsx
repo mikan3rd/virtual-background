@@ -1,5 +1,5 @@
 import { BackgroundConfig, backgroundImageUrls } from '../helpers/backgroundHelper';
-import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
 import BlockIcon from '@material-ui/icons/Block';
 import BlurOnIcon from '@material-ui/icons/BlurOn';
 import Card from '@material-ui/core/Card';
@@ -44,7 +44,7 @@ function BackgroundConfigCard(props: BackgroundConfigCardProps) {
   );
 }
 
-const useStyles = makeStyles((_theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     root: {
       flex: 1,

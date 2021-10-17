@@ -1,5 +1,5 @@
 import { SourceConfig, sourceVideoUrls } from '../helpers/sourceHelper';
-import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import React from 'react';
@@ -44,7 +44,7 @@ function SourceConfigCard(props: SourceConfigCardProps) {
   );
 }
 
-const useStyles = makeStyles((_theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     root: {
       flex: 1,

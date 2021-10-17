@@ -175,7 +175,6 @@ module.exports = {
     'no-param-reassign': ['off'],
     '@typescript-eslint/no-floating-promises': ['off'],
     'no-console': ['off'],
-    'react/jsx-no-bind': ['off'],
-    '@typescript-eslint/no-unused-vars': ["warn", { "args": "none" }],
+    'react/jsx-no-bind': ['off'], // OK
   }
 };

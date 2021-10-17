@@ -41,7 +41,6 @@ export function buildBackgroundColorStage(
 
     uniform sampler2D u_inputFrame;
     uniform sampler2D u_personMask;
-    uniform sampler2D u_background;
     uniform vec2 u_coverage;
     uniform float u_lightWrapping;
     uniform float u_blendMode;
@@ -81,7 +80,6 @@ export function buildBackgroundColorStage(
   const backgroundOffsetLocation = gl.getUniformLocation(program, 'u_backgroundOffset');
   const inputFrameLocation = gl.getUniformLocation(program, 'u_inputFrame');
   const personMaskLocation = gl.getUniformLocation(program, 'u_personMask');
-  const backgroundLocation = gl.getUniformLocation(program, 'u_background');
   const coverageLocation = gl.getUniformLocation(program, 'u_coverage');
   const lightWrappingLocation = gl.getUniformLocation(program, 'u_lightWrapping');
   const blendModeLocation = gl.getUniformLocation(program, 'u_blendMode');
@@ -95,19 +93,11 @@ export function buildBackgroundColorStage(
   gl.uniform1f(lightWrappingLocation, 0);
   gl.uniform1f(blendModeLocation, 0);
 
-  const backgroundTexture: WebGLTexture | null = null;
-
   function render() {
     gl.viewport(0, 0, outputWidth, outputHeight);
     gl.useProgram(program);
     gl.activeTexture(gl.TEXTURE1);
     gl.bindTexture(gl.TEXTURE_2D, personMaskTexture);
-    if (backgroundTexture !== null) {
-      gl.activeTexture(gl.TEXTURE2);
-      gl.bindTexture(gl.TEXTURE_2D, backgroundTexture);
-      // TODO Handle correctly the background not loaded yet
-      gl.uniform1i(backgroundLocation, 2);
-    }
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
@@ -128,7 +118,6 @@ export function buildBackgroundColorStage(
   }
 
   function cleanUp() {
-    gl.deleteTexture(backgroundTexture);
     gl.deleteProgram(program);
     gl.deleteShader(fragmentShader);
     gl.deleteShader(vertexShader);

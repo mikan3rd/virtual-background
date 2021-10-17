@@ -170,13 +170,6 @@ module.exports = {
     'react/require-default-props': ['off'],
 
     // TODO
-    'react/destructuring-assignment': ['off'],
-    '@typescript-eslint/no-explicit-any': ['off'],
-    'no-underscore-dangle': ['off'],
-    'no-param-reassign': ['off'],
-    '@typescript-eslint/no-floating-promises': ['off'],
-    'no-console': ['off'],
-    'react/jsx-no-bind': ['off'],
-    '@typescript-eslint/no-unused-vars': ["warn", { "args": "none" }],
+    'react/jsx-no-bind': ['off'], // OK
   }
 };

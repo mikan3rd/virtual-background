@@ -21,6 +21,7 @@ function SourceViewer(props: SourceViewerProps) {
       videoRef.current.onloadeddata = () => {
         onLoad(videoRef.current);
       };
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       videoRef.current.play();
     }
 
@@ -45,6 +46,7 @@ function SourceViewer(props: SourceViewerProps) {
       videoRef.current.srcObject = null;
       videoRef.current.src = '';
     } else if (sourceConfig.type === 'camera') {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       getCameraStream();
     } else if (sourceConfig.url !== undefined) {
       videoRef.current.srcObject = null;

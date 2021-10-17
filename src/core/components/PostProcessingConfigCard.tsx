@@ -20,7 +20,7 @@ function PostProcessingConfigCard(props: PostProcessingConfigCardProps) {
 
   const classes = useStyles();
 
-  function handleSigmaSpaceChange(_event: any, value: number | number[]) {
+  function handleSigmaSpaceChange(_event: ChangeEvent<{}>, value: number | number[]) {
     onChange({
       ...config,
       jointBilateralFilter: {
@@ -30,7 +30,7 @@ function PostProcessingConfigCard(props: PostProcessingConfigCardProps) {
     });
   }
 
-  function handleSigmaColorChange(_event: any, value: number | number[]) {
+  function handleSigmaColorChange(_event: ChangeEvent<{}>, value: number | number[]) {
     onChange({
       ...config,
       jointBilateralFilter: {
@@ -40,14 +40,14 @@ function PostProcessingConfigCard(props: PostProcessingConfigCardProps) {
     });
   }
 
-  function handleCoverageChange(_event: any, value: number | number[]) {
+  function handleCoverageChange(_event: ChangeEvent<{}>, value: number | number[]) {
     onChange({
       ...config,
       coverage: value as [number, number],
     });
   }
 
-  function handleLightWrappingChange(_event: any, value: number | number[]) {
+  function handleLightWrappingChange(_event: ChangeEvent<{}>, value: number | number[]) {
     onChange({
       ...config,
       lightWrapping: value as number,

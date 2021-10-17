@@ -102,6 +102,7 @@ export function buildBackgroundImageStage(
   if (backgroundImage?.complete === true) {
     updateBackgroundImage(backgroundImage);
   } else if (backgroundImage !== null) {
+    // eslint-disable-next-line no-param-reassign
     backgroundImage.onload = () => {
       updateBackgroundImage(backgroundImage);
     };

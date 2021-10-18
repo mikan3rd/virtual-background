@@ -3,18 +3,17 @@ import { BackgroundColorStage, buildBackgroundColorStage } from './backgroundCol
 import { BackgroundConfig } from '../../core/helpers/backgroundHelper';
 import { BackgroundImageStage, buildBackgroundImageStage } from './backgroundImageStage';
 import { PostProcessingConfig } from '../../core/helpers/postProcessingHelper';
-import { SegmentationBackend, inputResolution } from '../../core/helpers/segmentationHelper';
 import { TFLite } from '../../core/hooks/useTFLite';
 import { buildJointBilateralFilterStage } from './jointBilateralFilterStage';
 import { buildResizingStage } from './resizingStage';
 import { buildSoftmaxStage } from './softmaxStage';
 import { compileShader, createTexture, glsl } from '../helpers/webglHelper';
+import { inputResolution } from '../../core/helpers/segmentationHelper';
 
 export function buildWebGL2Pipeline(
   sourceVideoElement: HTMLVideoElement,
   backgroundImage: HTMLImageElement | null,
   backgroundConfig: BackgroundConfig,
-  segmentationBackend: SegmentationBackend,
   canvas: HTMLCanvasElement,
   tflite: TFLite,
   addFrameEvent?: () => void,
@@ -89,7 +88,6 @@ export function buildWebGL2Pipeline(
     vertexShader,
     positionBuffer,
     texCoordBuffer,
-    segmentationBackend,
     tflite,
     segmentationTexture,
   );

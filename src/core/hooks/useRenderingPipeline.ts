@@ -1,6 +1,5 @@
 import { BackgroundConfig } from '../helpers/backgroundHelper';
 import { RenderingPipeline } from '../helpers/renderingPipelineHelper';
-import { SegmentationBackend } from '../helpers/segmentationHelper';
 import { TFLite } from './useTFLite';
 import { buildWebGL2Pipeline } from '../../pipelines/webgl2/webgl2Pipeline';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -15,12 +14,11 @@ declare global {
 type Props = {
   sourceVideoElement?: HTMLVideoElement;
   backgroundConfig: BackgroundConfig;
-  segmentationBackend: SegmentationBackend;
   tflite?: TFLite;
 };
 
 export function useRenderingPipeline(props: Props) {
-  const { sourceVideoElement, backgroundConfig, segmentationBackend, tflite } = props;
+  const { sourceVideoElement, backgroundConfig, tflite } = props;
 
   const [pipeline, setPipeline] = useState<RenderingPipeline | null>(null);
   const backgroundImageRef = useRef<HTMLImageElement>(document.createElement('img'));
@@ -56,7 +54,6 @@ export function useRenderingPipeline(props: Props) {
       sourceVideoElement,
       backgroundImageRef.current,
       backgroundConfig,
-      segmentationBackend,
       canvasRef.current,
       tflite,
     );
@@ -89,7 +86,7 @@ export function useRenderingPipeline(props: Props) {
 
       setPipeline(null);
     };
-  }, [sourceVideoElement, backgroundConfig, segmentationBackend, tflite, setCanvasMediaStream]);
+  }, [sourceVideoElement, backgroundConfig, tflite, setCanvasMediaStream]);
 
   return {
     pipeline,

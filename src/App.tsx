@@ -45,7 +45,6 @@ function App() {
       <ViewerCard
         sourceConfig={sourceConfig}
         backgroundConfig={backgroundConfig}
-        segmentationBackend={segmentationBackend}
         postProcessingConfig={postProcessingConfig}
         tflite={tflite}
       />

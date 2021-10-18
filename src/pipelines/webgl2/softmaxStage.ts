@@ -1,13 +1,12 @@
-import { SegmentationBackend, inputResolution } from '../../core/helpers/segmentationHelper';
 import { TFLite } from '../../core/hooks/useTFLite';
 import { compileShader, createPiplelineStageProgram, createTexture, glsl } from '../helpers/webglHelper';
+import { inputResolution } from '../../core/helpers/segmentationHelper';
 
 export function buildSoftmaxStage(
   gl: WebGL2RenderingContext,
   vertexShader: WebGLShader,
   positionBuffer: WebGLBuffer,
   texCoordBuffer: WebGLBuffer,
-  segmentationBackend: SegmentationBackend,
   tflite: TFLite,
   outputTexture: WebGLTexture,
 ) {
